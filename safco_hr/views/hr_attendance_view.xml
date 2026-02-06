@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="safco_hr_hr_attendance_view_form_base" model="ir.ui.view">
+            <field name="name">safco_hr.attendance.form.base</field>
+            <field name="model">hr.attendance</field>
+            <field name="priority" eval="80"/>
+            <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='check_out']" position="after">
+                   <field name="real_check_in" />
+                    <field name="real_check_out" />
+                    <field name="worked_hours" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="safco_hr_hr_attendance_view_tree" model="ir.ui.view">
+          <field name="name">safco_hr.hr.attendance.tree</field>
+          <field name="model">hr.attendance</field>
+          <field name="priority" eval="99"/>
+          <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+          <field name="arch" type="xml">
+            <xpath expr="//field[@name='check_out']" position="after">
+              <field name="real_check_in" />
+                <field name="real_check_out" />
+                <field name="worked_hours" />
+                <field name="is_valid" />
+                <field name="is_normalized" />
+                <field name="manager_id" />
+            </xpath>
+          </field>
+        </record>
+
+
+    </data>
+</odoo>

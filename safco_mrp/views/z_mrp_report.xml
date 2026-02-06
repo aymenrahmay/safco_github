@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="z_mrp_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div style="border: 1px solid black;">
+                        <div class="header" height="5">
+                        </div>
+                        <div class="page">
+                            <table style="height: 46px; width: 900px;" border="2">
+                                <caption>  </caption>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 138px;">
+                                            <strong>Formula code</strong>
+                                        </td>
+                                        <td style="width: 138px;">
+                                            <strong>Product</strong>
+                                        </td>
+                                        <td style="width: 156.267px;">
+                                            <strong>Start date/time</strong>
+                                        </td>
+                                        <td style="width: 118.733px;">
+                                            <strong>Bench No</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 138px;"> <span t-field="o.bom_id.code"/> </td>
+                                        <td style="width: 138px;"> <span t-field="o.product_id.name"/> </td>
+                                        <td style="width: 156.267px;">  <span t-field="o.create_date"/> </td>
+                                        <td style="width: 118.733px;">  <span t-field="o.name"/> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                            <table style="height: 54px; width: 900px;" border="2">
+                                <caption>  </caption>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 19px;">
+                                            <strong>S.NO</strong>
+                                        </td>
+                                        <td style="width: 10px;">
+                                            <strong>IDH CODE</strong>
+                                        </td>
+                                        <td style="width: 137px;">
+                                            <strong>Row material</strong>
+                                        </td>
+                                        <td style="width: 40.65px;">
+                                            <strong>Qty</strong>
+                                        </td>
+                                        <td style="width: 60.35px;">
+                                            <p>
+                                                <strong>RM Lot</strong>
+                                            </p>
+                                            <p>
+                                                <strong>No/Red dt.</strong>
+                                            </p>
+                                        </td>
+                                        <td style="width: 11px;">
+                                            <strong>Mixing time mts</strong>
+                                        </td>
+                                        <td style="width: 23px;">
+                                            <strong>Added Qty.</strong>
+                                        </td>
+                                    </tr>
+                                     <t t-set="i" t-value="1"/>
+                                    <tr t-foreach="o.move_raw_ids" t-as="l">
+                                        <td style="width: 19px;"> <span t-esc="i"/> </td>
+                                        <td style="width: 10px;"> <span t-field="l.product_id.default_code"/> </td>
+                                        <td style="width: 137px;"> <span t-field="l.product_id.name"/> </td>
+                                        <td style="width: 40.65px;"> <span t-field="l.quantity_done"/>-<span t-field="l.product_uom.name"/>  </td>
+                                        <td style="width: 60.35px;">  </td>
+                                        <td style="width: 11px;">  </td>
+                                        <td style="width: 23px;">  </td>
+                                        <t t-set="i" t-value="i+1"/>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 19px;"></td>
+                                        <td style="width: 10px;">  </td>
+                                        <td style="width: 137px;"> <strong>Total</strong> </td>
+                                        <td style="width: 40.65px;"> <span t-field="o.total_qty"/>  </td>
+                                        <td style="width: 60.35px;">  </td>
+                                        <td style="width: 11px;">  </td>
+                                        <td style="width: 23px;">  </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                            <table style="height: 61px; width: 900px;" border="2">
+                                <caption>  </caption>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 114.683px;">
+                                            <strong>Vessel number</strong>
+                                        </td>
+                                        <td style="width: 393.317px;">
+                                            <strong>Batch volum</strong>
+                                        </td>
+                                        <td style="width: 10px;">
+                                            <strong>Finishing date</strong>
+                                        </td>
+                                        <td style="width: 49px;">
+                                            <strong>Finishing time</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 114.683px;"><span t-field="o.vise_number"/>  </td>
+                                        <td style="width: 393.317px;"> <span t-field="o.product_qty"/>  </td>
+                                        <td style="width: 10px;"> <span t-field="o.date_finished"/> </td>
+                                        <td style="width: 49px;"> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                            <table style="height: 20px;" border="2" width="900">
+                                <caption>  </caption>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 559px height: 50px;">
+                                            <strong>WEIGHING/MIXING Operator:<span t-field="o.mixing_operator"/>  </strong>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                            <p>
+                                <strong>Verified by:<span t-field="o.verified_by"/></strong>
+                            </p>
+                            <p>
+                                <strong>Remarks:</strong>
+                            </p>
+                            <p>
+                                <strong>Quality control:</strong>
+                            </p>
+                            <table style="height: 77px; border-color: 2;" border="2" width="900">
+                                <caption>  </caption>
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 87.5px;">
+                                            <strong>Ph</strong>
+                                        </td>
+                                        <td style="width: 87.5px;"> <span t-field="o.ph"/> </td>
+                                        <td style="width: 87.5px;">
+                                            <strong>Sp. Gravity</strong>
+                                        </td>
+                                        <td style="width: 87.5px;"> <span t-field="o.sp"/> </td>
+                                        <td style="width: 87.5px;">
+                                            <strong>Color</strong>
+                                        </td>
+                                        <td style="width: 87.5px;"><span t-field="o.color"/>   </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 87.5px;">
+                                            <strong>ODour</strong>
+                                        </td>
+                                        <td style="width: 87.5px;"> <span t-field="o.od"/> </td>
+                                        <td style="width: 87.5px;">
+                                            <strong>Refractive index</strong>
+                                        </td>
+                                        <td style="width: 87.5px;">  <span t-field="o.refractive"/> </td>
+                                        <td style="width: 87.5px;">
+                                            <strong>Others</strong>
+                                        </td>
+                                        <td style="width: 87.5px;">  <span t-field="o.other"/> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                            <table style="width: 902.983px;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 306px;">
+                                            <strong>Status: </strong> <span t-field="o.status"/>
+                                        </td>
+                                        <td style="width: 593.983px;">
+                                            <strong>Remarks:</strong>  <span t-field="o.remarks"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 306px;">
+                                            <strong>PASSED by ( QC)</strong>
+                                        </td>
+                                        <td style="width: 593.983px;">  </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>
+                                <strong>  Date/Time : <span t-field="o.confirmation_date_time"/> </strong>
+                            </p>
+                            <p>  </p>
+                            <table style="width: 895.2px; height: 36px;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 155px;">
+                                            <strong>Praperd by: <span t-field="o.create_uid"/>   </strong>
+                                        </td>
+                                        <td style="width: 138px;">  </td>
+                                        <td style="width: 200px;">
+                                            <strong>Approved by :  <span t-field="o.user_id"/> </strong>
+                                            <br/>
+                                            <strong>R&amp;d manager : <span t-field="o.user_id"/> </strong>
+                                        </td>
+                                        <td style="width: 362.2px;">  </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>  </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</openerp>

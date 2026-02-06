@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+		<report
+            id="z_mrp_production_order_report_printout"
+			string="MRP: Production order"
+			model="mrp.production"
+			report_type="qweb-pdf"
+			file="safco_mrp.z_mrp_production_order_report"
+            name="safco_mrp.z_mrp_production_order_report"
+		/>
+		<report
+            id="z_mrp_bom_request_printout"
+			string="MRP: Raw Material Request Form"
+			model="mrp.production"
+			report_type="qweb-pdf"
+			file="safco_mrp.z_mrp_bom_request_report"
+            name="safco_mrp.z_mrp_bom_request_report"
+		/>
+		<report
+            id="z_mrp_process_batch_card_printout"
+			string="MRP: Process Batch report"
+			model="mrp.production"
+			report_type="qweb-pdf"
+			file="safco_mrp.z_mrp_process_batch_card_report"
+            name="safco_mrp.z_mrp_process_batch_card_report"
+		/>
+		<report
+            id="z_mrp_product_analysis_printout"
+			string="MRP: Product Analysis Report"
+			model="mrp.production"
+			report_type="qweb-pdf"
+			file="safco_mrp.z_mrp_product_analysis_report"
+            name="safco_mrp.z_mrp_product_analysis_report"
+		/>
+		<report
+            id="z_mrp_product_release_certificate_printout"
+			string="MRP: Product release certificate"
+			model="mrp.production"
+			report_type="qweb-pdf"
+			file="safco_mrp.z_mrp_product_release_certificate_report"
+            name="safco_mrp.z_mrp_product_release_certificate_report"
+		/>
+
+	</data>
+</openerp>

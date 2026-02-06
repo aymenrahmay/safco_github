@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record model="ir.cron" id="employee_data_reminder">
+            <field name="name">HR Employee Data Expiration</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_hr_employee"/>
+            <field name="state">code</field>
+            <field name="code">model.mail_reminder()</field>
+        </record>
+        <record model="ir.cron" id="get_attendences_employees">
+            <field name="name">Attendances: Get attendances from devices</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="state">code</field>
+            <field name="nextcall" eval="datetime.now(pytz.timezone('UTC')).strftime('%Y-%m-%d 23:50:59')" />
+            <field name="code">model.cron_get_attendences_from_remote_machines(False)</field>
+        </record>
+
+    </data>
+</odoo>

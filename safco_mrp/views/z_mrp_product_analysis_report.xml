@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="z_mrp_product_analysis_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div style="border: 1px solid black;">
+                        <div class="header">
+                            <table style="width:1100px;background-color:#DCDCDC;" border="2">
+                                <tr>
+                                    <td rowspan="4" style="width:15%;vertical-align: middle;text-align: center;background-color:#FFF;">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height:90pt;max-width:120%" alt="Company Logo"/>
+                                    </td>
+                                    <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
+                                        <center>
+                                            <strong>
+                                                <span t-field="o.company_id.name"/> <br></br><br></br>Product Analysis Report
+                                            </strong>
+                                        </center>
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                        DOC  NO:<br></br>
+                                        REV.NO:<br></br>
+                                        DATE:<br></br>
+                                        PAGE:
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                        FM QC 024<br></br>
+                                        0<br></br>
+                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br></br>
+                                        1 of 1
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="page">
+                            Product Details:
+                            <table  style="width:1100px;" border="2">
+                                <tr>
+                                    <td style="width:15%;background-color:#DCDCDC;" ><strong>Product Name</strong></td>
+                                    <td><span t-field="o.product_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;"><strong>Bach No</strong></td>
+                                    <td><span t-field="o.name"/><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;"><strong>Production Date</strong></td>
+                                    <td><span t-field="o.date_planned_start"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;"><strong>Quantity (kg)</strong></td>
+                                    <td><span t-field="o.product_qty"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;"><strong>Mixer Code</strong></td>
+                                    <td><span/></td>
+                                </tr>
+                            </table>
+                            <br/><br/><br/><br/>
+                            <table  style="width:1100px;" border="2">
+                                <thead style="background-color:#DCDCDC;">
+                                    <td style="width:15%;"><strong>Parameter</strong></td>
+                                    <td><strong>Result</strong></td>
+                                    <td><strong>Remark</strong></td>
+                                </thead>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">pH</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Specify Gravity</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Refractive Index (RI)</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Color</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Odor</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Viscosity</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Appearance</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                            </table>
+                            <br/><br/>
+                            <table style="width:1100px;" border="2">
+                                <tr style="background-color:#DCDCDC;">
+                                    <td>Inspected By :</td>
+                                    <td>Approved By</td>
+                                </tr>
+                                <tr style="height:100px;">
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr style="background-color:#DCDCDC;">
+                                    <td>Quality Manager</td>
+                                    <td>Factory Manager</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="footer">
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</openerp>

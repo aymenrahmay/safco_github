@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="z_mrp_header">
+            <table style="width:1100px;background-color:#DCDCDC;" border="2">
+                <tr>
+                    <td rowspan="4" style="width:15%;vertical-align: middle;text-align: center;background-color:#FFF;">
+                        <img alt="Logo" src="/safco_mrp/static/src/img/logo.png"/>
+                    </td>
+                    <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
+                        <center>
+                            <strong>
+                                <span t-field="o.company_id.name"/><br></br>
+                                <br></br>
+                                        <t t-esc="template_report"/>
+                            </strong>
+                        </center>
+                    </td>
+                    <td style="width:15%;valign=top;">
+                        FM-PD-01<br></br>Rev.00<br></br>17/01/2023
+                    </td>
+                    <td style="width:15%;valign=top;">
+                    </td>
+                </tr>
+
+            </table>
+        </template>
+    </data>
+</openerp>

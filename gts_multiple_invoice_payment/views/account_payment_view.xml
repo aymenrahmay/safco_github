@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_account_payment_form_inherit_gts" model="ir.ui.view">
+            <field name="name">account.payment.form.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <group position="after">
+                    <group>
+                        <group>
+                            <field name="selected_inv_total" force_save="1"/>
+                        </group>
+                        <group>
+                            <field name="balance"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page>
+                    <separator string="Please enter amount in invoices to pay"
+                               attrs="{'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+                    
+                        <field name="invoice_lines" nolabel="1" force_save="1"
+                               attrs="{'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))], 'readonly': [('state', 'not in', ('draft'))]}">
+                            <tree string="Invoices" editable="bottom" create="0" delete="0">
+                                <field name="partner_id" readonly="1"/>
+                                <field name="invoice_id" readonly="1" force_save="1"/>
+                                <field name="payment_state" readonly="1"/>
+                                <field name="invoice_date" readonly="1" force_save="1"/>
+                                <field name="amount_total" readonly="1" sum="amount_total" widget="monetary" force_save="1"/>
+                                <field name="residual" readonly="1" sum="residual" widget="monetary" force_save="1"/>
+                                <field name="amount" sum="amount" widget="monetary" required="1" force_save="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                </group>
+            </field>
+        </record>
+<record id="payment_invoice_lines_tree_view" model="ir.ui.view">
+    <field name="name">payment.invoice.line.tree</field>
+    <field name="model">payment.invoice.line</field>
+    <field name="arch" type="xml">
+        <tree string="Payment invoice line">
+            <field name="invoice_id"/>
+             <field name="invoice_sales_person_id"/>
+            <field name="payment_id"/>
+            <field name="account_manager_id"/>
+            <field name="payment_date"/>
+            <field name="partner_id"/>
+            <field name="amount_total"/>
+            <field name="residual"/>
+            <field name="amount"/>
+            <field name="invoice_date"/>
+            <field name="payment_state"/>
+        </tree>
+    </field>
+</record>
+
+<record id="payment_invoice_line_form_view" model="ir.ui.view">
+    <field name="name">payment.invoice.line.form</field>
+    <field name="model">payment.invoice.line</field>
+    <field name="arch" type="xml">
+        <form string="Payment Invoice Line">
+            <sheet>
+                <group>
+                    <field name="invoice_id"/>
+                    <field name="invoice_sales_person_id"/>
+                    <field name="payment_id"/>
+                     <field name="account_manager_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount_total"/>
+                    <field name="residual"/>
+                    <field name="amount"/>
+                    <field name="invoice_date"/>
+                    <field name="payment_state"/>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+
+<record id="action_payment_invoice_lines" model="ir.actions.act_window">
+    <field name="name">Payment invoice lines</field>
+    <field name="res_model">payment.invoice.line</field>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="payment_invoice_lines_tree_view"/>
+    <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+        </p><p>
+        </p>
+    </field>
+</record>
+
+<menuitem name="Payment invoice lines"
+    parent="account.menu_finance_entries_accounting_miscellaneous"
+    id="menu_payment_invoice_lines"
+    action="action_payment_invoice_lines"/>
+
+    </data>
+</openerp>

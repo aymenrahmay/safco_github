@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_aged_report_form" model="ir.ui.view">
+            <field name="name">aged.report.form</field>
+            <field name="model">aged.report</field>
+            <field name="arch" type="xml">
+                <form string=">Aged Receivable Report" create="false" edit="false" delete="0" duplicate="0">
+                    <sheet>
+                        <group cols="4">
+                            <group>
+                                <field name="partner_id" />
+                                <field name="parent_id"/>
+                                <field name="account_move_id"/>
+                                <field name="account_move_line_id"/>
+                                <field name="salesperson"/>
+                                <field name="invoice_id"/>
+                                <field name="date_inv"/>
+                            </group>
+                            <group>
+                                <field name="undue"/>
+                                <field name="part1"/>
+                                <field name="part2"/>
+                                <field name="part3"/>
+                                <field name="part4"/>
+                                <field name="part5"/>
+                                <field name="part6"/>
+                                <field name="part7"/>
+                                <field name="part8"/>
+                                <field name="part9"/>
+                                <field name="older"/>
+                                <field name="total"/>
+                                <field name="total_"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+	    </record>
+
+        <record id="view_aged_report_tree" model="ir.ui.view">
+            <field name="name">aged.report.tree</field>
+            <field name="model">aged.report</field>
+            <field name="arch" type="xml">
+                <tree string="Aged Receivable Report" create="false" edit="false" delete="0" duplicate="0">
+                    <field name="parent_id"/>
+                    <field name="partner_id" />
+                    <field name="account_move_id"/>
+                    <field name="account_move_line_id" />
+                    <field name="invoice_id"/>
+                    <field name="date_inv"/>
+                    <field name="undue"/>
+                    <field name="part1"/>
+                    <field name="part2"/>
+                    <field name="part3"/>
+                    <field name="part4"/>
+                    <field name="part5"/>
+                    <field name="part6"/>
+                    <field name="part7"/>
+                    <field name="part8"/>
+                    <field name="part9"/>
+                    <field name="older"/>
+                    <field name="total"/>
+                    <field name="total_"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_aged_report_search" model="ir.ui.view">
+            <field name="name">aged.report.search</field>
+            <field name="model">aged.report</field>
+            <field name="arch" type="xml">
+                <search string="Aged Receivable Report Analysis">
+                    <separator/>
+                    <field name="parent_id" string="Job Code"/>
+                    <group expand="1" string="Group By">
+                        <filter name="group_parent_id"
+                                string="Group Partner"
+                                context="{'group_by':'parent_id'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_aged_report_pivot" model="ir.ui.view">
+            <field name="name">Aged Receivable Report: Pivot</field>
+            <field name="model">aged.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Aged Receivable Report">
+                    <field name="parent_id" type="row"/>
+                    <!--<field name="date_inv" type="measure"/>-->
+                    <field name="undue" type="measure"/>
+                    <field name="part1" type="measure"/>
+                    <field name="part2" type="measure"/>
+                    <field name="part3" type="measure"/>
+                    <field name="part4" type="measure"/>
+                    <field name="part5" type="measure"/>
+                    <field name="part6" type="measure"/>
+                    <field name="part7" type="measure"/>
+                    <field name="older" type="measure"/>
+                    <field name="total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_aged_report_graph" model="ir.ui.view">
+            <field name="name">aged.report.graph</field>
+            <field name="model">aged.report</field>
+            <field name="arch" type="xml">
+                <graph string="Aged Receivable Report">
+                    <field name="parent_id"/>
+                </graph>
+            </field>
+        </record>
+
+    </data>
+</odoo>

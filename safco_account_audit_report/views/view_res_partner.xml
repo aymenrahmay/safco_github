@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_wizard_generate_audit_report" model="ir.actions.act_window">
+        <field name="name">Select Date Range</field>
+        <field name="res_model">audit.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.ui.view" id="safco_account_audit_report_view_partner_form">
+        <field name="name">safco_account_audit_report.res.partner.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='contact_addresses']" position="after">
+                <page string="Audit Report" name="yearly_audit_report">
+                <group>
+                    <group>
+                        <label for="audit_report_id" string="Audit Report" />
+                        <button name="%(action_wizard_generate_audit_report)d" type="action" string="Generate audit report" class="btn-primary" />
+                    </group>
+                    <group>
+                        <label for="audit_report_id" string="Generated Audit Report" />
+                        <field name="audit_report_id" placeholder="Generated Audit Report will appear here"/>
+                    </group>
+                    <group>
+                        <label for="to_print_on_audit_report_balance" string="Printed amount on the audit report" />
+                        <field name="to_print_on_audit_report_balance" placeholder="Amount printed will be displayed here"/>
+
+                    </group>
+                </group>
+            </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

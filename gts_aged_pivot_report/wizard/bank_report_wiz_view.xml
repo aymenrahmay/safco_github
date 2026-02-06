@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_bank_report_wiz" model="ir.ui.view">
+        <field name="name">Bank Report</field>
+        <field name="model">bank.report.wiz</field>
+        <field name="arch" type="xml">
+            <form string="Choose date">
+                <group>
+                    <group>
+                        <field name="to_date"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="open_bank_report_table" string="Retrieve the Report" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_bank_report_wiz" model="ir.actions.act_window">
+        <field name="name">Bank Report</field>
+        <field name="res_model">bank.report.wiz</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_bank_report_wiz"/>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!--<menuitem id="menu_bank_report_wiz"-->
+              <!--parent="gts_aged_pivot_report.menu_admin_reports"-->
+              <!--action="action_bank_report_wiz"-->
+              <!--name="Bank Report"-->
+              <!--sequence="36"-->
+              <!--groups="gts_aged_pivot_report.pivot_report_group"-->
+    <!--/>-->
+
+    <record id="xlsx_output_form_accounting" model="ir.ui.view">
+        <field name="name">xlsx.output.account.form</field>
+        <field name="model">xlsx.output.account</field>
+        <field name="arch" type="xml">
+            <form string="Download Report">
+                <group>
+                    <field name="xls_output"  filename="name"/>
+                    <field name="name" invisible="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_xlsx_output_accounting" model="ir.actions.act_window">
+        <field name="name">Report Download</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">xlsx.output.account</field>
+<!--        <field name="view_type">form</field>-->
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="advanced_web_domain_widget._DomainSelectorBits" owl="1">
+        <t t-set="tree" t-value="buildTree()"/>
+        
+        <!-- Company Filter Toggle -->
+        <div class="mt-3 d-flex justify-content-end" t-if="state.showCompanyFilterCheckbox and !props.readonly">
+            <div class="form-check form-switch">
+                <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="companyFilterToggle"
+                    t-att-checked="state.includeCompany"
+                    t-on-change="toggleApplyCompanyFilter"
+                />
+                <label class="form-check-label" for="companyFilterToggle">
+                    Company Filter
+                </label>
+            </div>
+        </div>
+
+        <t t-if="tree">
+            <DomainSelectorRootNodeBits
+                value="props.value"
+                node="tree"
+                readonly="props.readonly"
+                resModel="props.resModel"
+                isDebugMode="props.isDebugMode"
+                debugValue="props.debugValue"
+                className="props.className"
+            />
+        </t>
+        
+        <t t-else="">
+            <div t-att-class="props.className">This domain is not supported.</div>
+        </t>
+    </t>
+</templates>

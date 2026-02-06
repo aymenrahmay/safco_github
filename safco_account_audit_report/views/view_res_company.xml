@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="safco_account_audit_report_view_company_form">
+        <field name="name">safco_account_audit_report.res.company.inherit</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <div class="page" string="Auditing partner">
+                    <group>
+                        <field name="safco_auditing_partner_id"/>
+                    </group>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

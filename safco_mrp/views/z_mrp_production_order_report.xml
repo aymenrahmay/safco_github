@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="z_mrp_production_order_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div style="border: 1px solid black;">
+                        <div class="header">
+                            <table style="width:1100px;background-color:#DCDCDC;" border="2">
+                                <tr>
+                                    <td rowspan="4" style="width:15%;vertical-align: middle;text-align: center;background-color:#FFF;">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height:90pt;max-width:120%" alt="Company Logo"/>
+                                    </td>
+                                    <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
+                                        <center>
+                                            <strong>
+                                                <span t-field="o.company_id.name"/> <br></br><br></br>Production Order
+                                            </strong>
+                                        </center>
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                        FM-PD-01<br></br>Rev.00<br></br><span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/>
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="page">
+                            <table  style="width:1100px;" border="0">
+                                <tr>
+                                    <td style="width:700px;"><u>Date: <span t-esc="datetime.datetime.now().strftime('%Y-%m-%d')"></span></u></td>
+                                    <td><u>Time: <span t-esc="datetime.datetime.now().strftime('%H:%M')"></span> </u></td>
+                                </tr>
+                                <tr>
+                                    <td style="width:700px;"><u>MO number:<span t-field="o.name"/> </u></td>
+                                    <td><u>Product: <span t-field="o.product_id.name"/> </u></td>
+                                </tr>
+                                <tr>
+                                    <td><u>Order Qty: <span t-field="o.product_qty"/></u></td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table  style="width:1100px;" border="2">
+                                    <thead style="background-color:#DCDCDC;">
+                                        <td><strong>Sr. No.</strong></td>
+                                        <td><strong>Product/Code</strong></td>
+                                        <td><strong>Quantity</strong></td>
+                                        <td><strong>Customer reference</strong></td>
+                                        <td><strong>Remarks</strong></td>
+                                    </thead>
+                                    <t t-foreach="o.move_raw_ids" t-as="raw">
+                                        <tr>
+                                            <td><span t-field="raw.product_id.default_code"/></td>
+                                            <td><span t-field="raw.product_id.name"/></td>
+                                            <td><span t-field="raw.product_uom_qty"/></td>
+                                            <td><span t-field="raw.origin"/></td>
+                                            <td><span t-field="raw.name"/></td>
+                                        </tr>
+                                    </t>
+                            </table>
+                        </div>
+                        <div class="footer">
+                            <table class="table table-sm text-center" style="width:1100px; border=1">
+                                <thead>
+                                    <tr style="background-color:#DCDCDC;">
+                                            <td>Product Manager<br></br><span t-field="o.verified_by"/></td>
+                                            <td>QC<br></br><span t-field="o.mixing_operator"/></td>
+                                            <td>Factory Manager</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</openerp>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>  1 17/07/2021 1of1
+    <data>
+        <template id="z_mrp_process_batch_card_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div style="border: 1px solid black;">
+                        <div class="header">
+                            <table style="width:1100px;background-color:#DCDCDC;" border="2">
+                                <tr>
+                                    <td rowspan="4" style="width:15%;vertical-align: middle;text-align: center;background-color:#FFF;">
+                                        <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height:90pt;max-width:120%" alt="Company Logo"/>
+                                    </td>
+                                    <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
+                                        <center>
+                                            <strong>
+                                                <span t-field="o.company_id.name"/> <br></br><br></br>PROCESSING BATCH CARD
+                                            </strong>
+                                        </center>
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                        DOC  NO:<br></br>
+                                        REV.NO:<br></br>
+                                        DATE:<br></br>
+                                        PAGE:
+                                    </td>
+                                    <td style="width:15%;valign=top;">
+                                        FM-QC-20<br></br>
+                                        1<br></br>
+                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br></br>
+                                        1 of 1
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </div>
+                        <div class="page">
+                            <table  style="width:1100px;" border="2">
+                                <thead style="background-color:#DCDCDC;">
+                                    <td><strong>Mixer Code</strong></td>
+                                    <td><strong>Product Name</strong></td>
+                                    <td><strong>Start date &amp; time</strong></td>
+                                    <td><strong>Batch No.</strong></td>
+                                </thead>
+                                <tr>
+                                    <td></td>
+                                    <td><span t-field="o.product_id.name"/></td>
+                                    <td><span t-field="o.date_planned_start"/></td>
+                                    <td><span t-field="o.name"/></td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table  style="width:1100px;" border="2">
+                                <tr>
+                                    <td><strong>Clearance</strong></td>
+                                    <td><strong>Yes</strong></td>
+                                    <td><strong>No</strong></td>
+                                    <td><strong>Remark</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Area (Tanks - machine - surface - piper cleaning and sanitization)</td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                                <tr>
+                                    <td>Processing area does not contain any items from previous batches only Batch</td>
+                                    <td><span/></td>
+                                    <td><span /></td>
+                                    <td><span /></td>
+                                </tr>
+                                <tr>
+                                    <td>Materials are Released, Approved and materials in tank approval QC</td>
+                                    <td><span /></td>
+                                    <td><span /></td>
+                                    <td><span /></td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table  style="width:1100px;" border="2">
+                                <thead style="background-color:#DCDCDC;">
+                                    <td><strong>S. NO</strong></td>
+                                    <td><strong>IDH CODE</strong></td>
+                                    <td><strong>Raw Material</strong></td>
+                                    <td><strong>Qty in kg</strong></td>
+                                    <td><strong>Added Qty</strong></td>
+                                    <td><strong>Mixing time</strong></td>
+                                    <td><strong>REMARKS</strong></td>
+                                </thead>
+                                <t t-set="count" t-value="0"/>
+                                <t t-set="sum_qty" t-value="0"/>
+                                <t t-foreach="o.move_raw_ids" t-as="raw">
+                                    <t t-set="count" t-value="count + 1"/>
+                                    <t t-set="sum_qty" t-value="sum_qty + raw.product_qty"/>
+                                    <tr>
+                                        <td><span t-esc="count"/></td>
+                                        <td><span t-field="raw.product_id.default_code"/></td>
+                                        <td><span t-field="raw.product_id.name"/></td>
+                                        <td><span t-field="raw.product_qty"/></td>
+                                        <td> </td>
+                                        <td></td>
+                                        <td><span t-field="o.remarks"/></td>
+                                    </tr>
+                                </t>
+                                <tr>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                    <td style="background-color:#DCDCDC;">TOTAL</td>
+                                    <td><span t-esc="sum_qty"/></td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table  style="width:1100px;" border="2">
+                                <thead style="background-color:#DCDCDC;">
+                                    <td><strong>Temparature</strong></td>
+                                    <td><strong>Batch volume (kg)</strong></td>
+                                    <td><strong>Finishing date</strong></td>
+                                    <td><strong>Finishing Time</strong></td>
+                                </thead>
+                                <tr>
+                                    <td>  </td>
+                                    <td><span t-field="o.product_qty"/></td>
+                                    <td>  </td>
+                                    <td>  </td>
+                                </tr>
+                            </table>
+                            <br></br>
+                            <table style="width:550px;display:inline;" border="2">
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Weighted by :</td>
+                                </tr>
+                                <tr style="height:100px;">
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td >Storekeeper (KHALIL)</td>
+                                </tr>
+                            </table>
+                            <table style="width:375px;display:inline;align:right;margin-left:150px;" border="2">
+                                <tr>
+                                    <td style="background-color:#DCDCDC;">Mixing by :</td>
+                                </tr>
+                                <tr style="height:100px;">
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Mixing operator</td>
+                                </tr>
+                            </table>
+                            <br></br><br></br>
+                            <table  style="width:1100px;" border="2">
+                                <tr style="background-color:#DCDCDC;">
+                                    <td><strong>Quality Manager :</strong></td>
+                                    <td><strong>Production Manager :</strong></td>
+                                    <td><strong>Factory Manager :</strong></td>
+                                </tr>
+                                <tr>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                    <td><span/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="footer">
+
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+        </template>
+    </data>
+</openerp>

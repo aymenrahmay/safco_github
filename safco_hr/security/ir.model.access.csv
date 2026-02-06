@@ -1,0 +1,11 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_hr_employee_dependents_employee","hr.employee.dependents_employee","model_hr_employee_dependents","base.group_user",1,0,0,0
+"access_hr_employee_dependents_manager","hr.employee.dependents_manager","model_hr_employee_dependents","hr.group_hr_manager",1,1,1,1
+"access_hr_employee_dependents_user","hr.employee.dependents_user","model_hr_employee_dependents","hr.group_hr_user",1,1,1,1
+access_hr_employee_relation,access_access_hr_employee_relation,model_hr_employee_relation,base.group_user,1,1,1,1
+"access_hr_employee_insurancemanager","hr.employee.employee_insurance","model_hr_employee_insurance","hr.group_hr_manager",1,1,1,1
+"access_hr_employee_insuranceuser","hr.employee.employee_insurance","model_hr_employee_insurance","hr.group_hr_user",1,0,0,0
+"access_hr_employee_insurance_typemanager","hr.employee.employee_insurance_type","model_hr_employee_insurance_type","hr.group_hr_manager",1,1,1,1
+"access_hr_employee_insurance_typeuser","hr.employee.employee_insurance_type","model_hr_employee_insurance_type","hr.group_hr_user",1,0,0,0
+"access_hr_employee_normalize_attendencesmanager","hr.employee.model_normalize_attendences","model_normalize_attendences","hr.group_hr_manager",1,1,1,1
+"access_hr_employee_normalize_attendences","hr.employee.model_normalize_attendences","model_normalize_attendences","hr.group_hr_user",1,0,0,0

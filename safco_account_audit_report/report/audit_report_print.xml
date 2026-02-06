@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="audit_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="safco_account_audit_report.custom_internal_layout">
+                    <t t-call="safco_account_audit_report.audit_report_template"/>
+                </t>
+            </t>
+        </t>
+    </template>
+    <report id="audit_report_report"
+            model="res.partner"
+            report_type="qweb-pdf"
+            string="Audit report"
+            name="safco_account_audit_report.audit_report"
+            file="safco_account_audit_report.audit_report"
+            attachment_use="True"
+            attachment="'AuditReport-' + object.name + '.pdf'"
+            menu="False"
+            print_report_name="'ISR-%s' % object.name"
+    />
+
+    <template id="custom_internal_layout">
+        <t t-if="not o" t-set="o" t-value="doc"/>
+
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <div class="header">
+            <div class="row">
+
+            </div>
+        </div>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-raw="0"/>
+        </div>
+    </template>
+
+    <template id="audit_report_template">
+        <t t-foreach="doc" t-as="o">
+            <div class="page" style="padding-top:45px">
+                <t t-set="company" t-value="res_company"/>
+                <div style="font-size: 16pt">
+                    <p class="western" align="center" style="line-height: 150%">
+                        <font face="Arial, sans-serif">
+                            <font size="4" style="font-size: 16pt">
+                                <b>
+                                    <span lang="ar-SA">طلب مطابقة رصيد</span>
+                                </b>
+                            </font>
+                        </font>
+                    </p>
+                    <style>
+                        table, tr, td {
+                        border: 10px solid white;
+                        }
+                        hr {
+                        border: 0;
+                        border-top: 5px solid black;
+                        }
+                    </style>
+
+                    <table cellspacing="0" cellpadding="5">
+                        <tbody>
+                            <tr>
+                                <td style="text-align: right;">
+                                    <p class="western" style="line-height: 150%">
+                                        <font face="Traditional Arabic, serif">
+                                            <font size="3">
+                                                <span lang="ar-SA">
+                                                    <font face="Arial, sans-serif">
+                                                        <font size="4" style="font-size: 16pt">
+                                                            السادة
+                                                            <b>
+                                                                <span t-field="o.name"/>
+                                                            </b>
+                                                              الموقرون
+                                                        </font>
+                                                        <br/>
+                                                        <font size="4" style="font-size: 16pt; text-align: right;">
+                                                            السلام عليكم و رحمة الله و بركاته
+                                                        </font>
+                                                        <br/>
+                                                        <font size="4" style="font-size: 16pt">
+                                                            إشارة إلى المراجعة السنوية لحساباتنا والتي يقوم بها السادة/
+                                                            <b>
+                                                                <span t-field="o.company_id.safco_auditing_partner_id.name"/>
+                                                            </b>
+                                                            وحيث أن إجراءات المراجعة تتطلب من المحاسب القانوني
+                                                            مطابقة أرصدة حساباتنا مع الغير
+                                                            <br/>
+                                                            لذا نفيدكم بأن رصيدكم لدينا دائن/مدين بمبلغ
+
+                                                            <b>
+                                                                <span t-esc="o.to_print_on_audit_report_balance"/>
+<!--                                                                <span t-esc="o.to_print_on_audit_report_balance_txt"/>-->
+                                                            </b>
+
+                                                            ريال سعودي كما نرجو المصادقة على
+                                                            صحة الرصيد في 31/12/2024
+                                                            <br/>
+                                                            وفي حالة عدم الرد خلال خمسة عشر يوما من تاريخه يعتبر ذلك موافقة نهائية منكم على صحة
+                                                            الرصيد المبين أعلاه
+                                                            <br/>
+                                                        </font>
+                                                        <font style="text-align: center;">
+                                                            <br/>
+                                                            <span lang="ar-SA">و تفضلوا بقبول وافر التحية</span>
+                                                            <br/>
+                                                            <span lang="ar-SA">الحسابات</span>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <br/>
+                                                            <hr/>
+                                                            <font size="4" style="font-size: 16pt; text-align: right;">
+                                                                السادة
+                                                                <b>
+                                                                    <span t-field="o.company_id.safco_auditing_partner_id.name"/>
+                                                                </b>
+                                                                المحترمين
+                                                                <br/>
+                                                                تحية طيبة وبعد
+                                                                <br/>
+                                                                بناءً على الخطاب الموجه إلينا أعلاه فإننا نوافق على أن رصيد السادة/ شركة صافكو الصناعية
+                                                                مدين/دائن بمبلغ #.........................# كما هو ظاهر بدفاترنا في تاريخ 31/12/2024
+                                                                <br/>
+                                                                :مع ملاحظة ما يلي
+                                                                <br/>
+                                                                ........................................................................................................
+                                                                <br/>
+                                                                ........................................................................................................
+                                                                <br/>
+                                                                <br/>
+                                                                <div style="text-align:center">
+                                                                    المحاسب                         المدير المالي
+                                                                </div>
+                                                            </font>
+                                                        </font>
+                                                    </font>
+                                                </span>
+                                            </font>
+                                        </font>
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+
+</odoo>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_aged_payable_report_form" model="ir.ui.view">
+            <field name="name">aged.payable.report.form</field>
+            <field name="model">aged.payable.report</field>
+            <field name="arch" type="xml">
+                <form string=">Aged Payable Report" create="false" edit="false" delete="0" duplicate="0">
+                    <sheet>
+                        <group cols="4">
+                            <group>
+                                <field name="partner_id" invisible="0"/>
+                                <field name="parent_id" invisible="0"/>
+                                <field name="account_move_id"/>
+                                <field name="account_move_line_id"/>
+                                <field name="salesperson"/>
+                                <field name="invoice_id"/>
+                            </group>
+                            <group>
+                                <field name="part1"/>
+                                <field name="part2"/>
+                                <field name="part3"/>
+                                <field name="part4"/>
+                                <field name="part5"/>
+                                <field name="part6"/>
+                                <field name="part7"/>
+                                <field name="older"/>
+                                <field name="total"/>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+	    </record>
+
+        <record id="view_aged_payable_report_tree" model="ir.ui.view">
+            <field name="name">aged.payable.report.tree</field>
+            <field name="model">aged.payable.report</field>
+            <field name="arch" type="xml">
+                <tree string="Aged Payable Report" create="false" edit="false" delete="0" duplicate="0">
+                    <field name="parent_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="account_move_id" invisible="1"/>
+                    <field name="account_move_line_id" invisible="1"/>
+                    <field name="invoice_id" invisible="1"/>
+                    <field name="part1"/>
+                    <field name="part2"/>
+                    <field name="part3"/>
+                    <field name="part4"/>
+                    <field name="part5"/>
+                    <field name="part6"/>
+                    <field name="part7"/>
+                    <field name="older"/>
+                    <field name="total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_aged_payable_report_search" model="ir.ui.view">
+            <field name="name">aged.payable.report.search</field>
+            <field name="model">aged.payable.report</field>
+            <field name="arch" type="xml">
+                <search string="Aged Payable Report Analysis">
+                    <separator/>
+                    <field name="parent_id" string="Job Code"/>
+                    <group expand="1" string="Group By">
+                        <filter name="group_parent_id"
+                                string="Group Partner"
+                                context="{'group_by':'parent_id'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_aged_payable_report_pivot" model="ir.ui.view">
+            <field name="name">Aged Payable Report: Pivot</field>
+            <field name="model">aged.payable.report</field>
+            <field name="arch" type="xml">
+                <pivot string="Aged Payable Report">
+                    <field name="undue" type="measure"/>
+                    <field name="parent_id" type="row"/>
+                    <field name="part1" type="measure"/>
+                    <field name="part2" type="measure"/>
+                    <field name="part3" type="measure"/>
+                    <field name="part4" type="measure"/>
+                    <field name="part5" type="measure"/>
+                    <field name="part6" type="measure"/>
+                    <field name="part7" type="measure"/>
+                    <field name="older" type="measure"/>
+                    <field name="total" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_aged_payable_report_graph" model="ir.ui.view">
+            <field name="name">aged.payable.report.graph</field>
+            <field name="model">aged.payable.report</field>
+            <field name="arch" type="xml">
+                <graph string="Aged Payable Report">
+                    <field name="parent_id"/>
+                </graph>
+            </field>
+        </record>
+
+    </data>
+</odoo>

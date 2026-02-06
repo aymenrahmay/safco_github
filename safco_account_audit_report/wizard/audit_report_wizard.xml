@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="send_audit_report_view_form" model="ir.ui.view">
+        <field name="name">send_audit_report.form</field>
+        <field name="model">audit.report</field>
+        <field name="arch" type="xml">
+            <form string="Select Date Range">
+                <group>
+                    <field name="partner_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </group>
+                <footer>
+                    <button string="Confirm" type="object" name="action_print_audit_report" class="btn-primary"/>
+                    <button string="Cancel" type="context" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

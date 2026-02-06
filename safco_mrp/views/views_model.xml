@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="mrp_production_form_view_safco">
+            <field name="name">mrp.production</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="vise_number"/>
+                    <field name="date_finished"/>
+                    <field name="location_src_id" readonly = '1'/>
+                    <field name="location_dest_id" readonly = '1'/>
+                </field>
+                <field name="move_raw_ids" position="after">
+                    <group>
+                        <group>
+                            <field name="verified_by"/>
+                            <field name="mixing_operator"/>
+                            <field name="confirmation_date_time"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="remarks"/>
+                        </group>
+                        <group>
+                            <field name="ph"/>
+                            <field name="sp"/>
+                            <field name="color"/>
+                        </group>
+                        <group>
+                            <field name="od"/>
+                            <field name="refractive"/>
+                            <field name="other"/>
+                        </group>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="mrp_report_list_view_safco">
+            <field name="name">mrp.report</field>
+            <field name="model">mrp.report</field>
+            <field name="inherit_id" ref="mrp_account_enterprise.mrp_report_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="production_id" position="after">
+                    <field name="qty_produced"/>
+                    <field name="unit_cost"/>
+                    <field name="total_cost"/>
+                </field>
+            </field>
+        </record>
+    </data>
+
+</odoo>
