@@ -106,9 +106,16 @@ class HrPayslip(models.Model):
         # Make sure to reset invalid payslip's worked days line
         self.update({'worked_days_line_ids': [(5, 0, 0)]})
         # Ensure work entries are generated for all contracts
-        generate_from = min(p.date_from for p in self)
+        generate_from_date = min(fields.Date.to_date(p.date_from) for p in self)
         current_month_end = date_utils.end_of(fields.Date.today(), 'month')
-        generate_to = max(min(fields.Date.to_date(p.date_to), current_month_end) for p in self)
+        generate_to_date = max(
+            min(fields.Date.to_date(p.date_to), current_month_end)
+            for p in self
+        )
+
+        generate_from = datetime.combine(generate_from_date, time.min)
+        generate_to = datetime.combine(generate_to_date, time.max)
+
         self.mapped('contract_id')._generate_work_entries(generate_from, generate_to)
 
         for slip in valid_slips:
