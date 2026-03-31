@@ -8,7 +8,7 @@
     'author': 'Aymen RAHMANI',
     'maintainer': 'Aymen RAHMANI',
     'license': 'AGPL-3',
-    'depends': ['base', 'hr', 'hr_payroll', 'mail', 'hr_leave', 'hr_contract', 'hr_attendance'],
+    'depends': ['base', 'hr', 'hr_payroll', 'mail', 'hr_leave', 'hr_attendance'],
     'data': [
         'security/ir.model.access.csv',
         'data/data.xml',
