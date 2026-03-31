@@ -1,10 +1,6 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv import expression
-
-READONLY_STATES = {
-    "draft": [("readonly", False)],
-}
+from odoo.fields import Domain
 
 
 class InventoryAdjustmentsGroup(models.Model):
@@ -20,20 +16,17 @@ class InventoryAdjustmentsGroup(models.Model):
         default="Inventory",
         string="Inventory Reference",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     date = fields.Datetime(
         default=lambda self: fields.Datetime.now(),
         readonly=True,
-        states=READONLY_STATES,
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
         readonly=True,
         index=True,
-        states={"draft": [("readonly", False)]},
         default=lambda self: self.env.company,
         required=True,
     )
@@ -54,7 +47,6 @@ class InventoryAdjustmentsGroup(models.Model):
         "Owner",
         help="This is the owner of the inventory adjustment",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     location_ids = fields.Many2many(
@@ -63,7 +55,6 @@ class InventoryAdjustmentsGroup(models.Model):
         domain="[('usage', '=', 'internal'), "
         "'|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     product_selection = fields.Selection(
@@ -77,7 +68,6 @@ class InventoryAdjustmentsGroup(models.Model):
         default="all",
         required=True,
         readonly=True,
-        states=READONLY_STATES,
     )
 
     product_ids = fields.Many2many(
@@ -85,7 +75,6 @@ class InventoryAdjustmentsGroup(models.Model):
         string="Products",
         domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     stock_quant_ids = fields.Many2many(
@@ -93,14 +82,12 @@ class InventoryAdjustmentsGroup(models.Model):
         string="Inventory Adjustment",
         domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     category_id = fields.Many2one(
         "product.category",
         string="Product Category",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     lot_ids = fields.Many2many(
@@ -108,7 +95,6 @@ class InventoryAdjustmentsGroup(models.Model):
         string="Lot/Serial Numbers",
         domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     stock_move_ids = fields.One2many(
@@ -116,7 +102,6 @@ class InventoryAdjustmentsGroup(models.Model):
         "inventory_adjustment_id",
         string="Inventory Adjustments Done",
         readonly=True,
-        states=READONLY_STATES,
     )
 
     count_stock_quants = fields.Integer(
@@ -142,7 +127,6 @@ class InventoryAdjustmentsGroup(models.Model):
     responsible_id = fields.Many2one(
         comodel_name="res.users",
         string="Assigned to",
-        states={"draft": [("readonly", False)]},
         readonly=True,
         help="Specific responsible of Inventory Adjustment.",
     )
@@ -178,31 +162,29 @@ class InventoryAdjustmentsGroup(models.Model):
     @api.depends("stock_quant_ids")
     def _compute_count_stock_quants(self):
         for rec in self:
+            current_inventory_id = rec.id
             quants = rec.stock_quant_ids
             quants_to_do = quants.filtered(lambda q: q.to_do)
-            quants_pending_to_review = quants_to_do.filtered(
-                lambda q: q.current_inventory_id.id == rec.id
-            )
+            quants_pending_to_review = [
+                q
+                for q in quants_to_do
+                if q.current_inventory_id.id == current_inventory_id
+            ]
             count_pending_to_review = len(quants_pending_to_review)
             rec.count_stock_quants = len(quants)
-            rec.count_stock_quants_string = "{} / {}".format(
-                count_pending_to_review, rec.count_stock_quants
+            rec.count_stock_quants_string = (
+                f"{count_pending_to_review} / {rec.count_stock_quants}"
             )
 
     @api.depends("stock_move_ids")
     def _compute_count_stock_moves(self):
-        group_fname = "inventory_adjustment_id"
-        group_data = self.env["stock.move.line"].read_group(
-            [
-                (group_fname, "in", self.ids),
-            ],
-            [group_fname],
-            [group_fname],
+        field_name = "inventory_adjustment_id"
+        result = self.env["stock.move.line"]._read_group(
+            domain=[(field_name, "in", self.ids)],
+            groupby=[field_name],
+            aggregates=[f"{field_name}:count"],
         )
-        data_by_adj_id = {
-            row[group_fname][0]: row.get(f"{group_fname}_count", 0)
-            for row in group_data
-        }
+        data_by_adj_id = {rec.id: cnt for rec, cnt in result}
         for rec in self:
             rec.count_stock_moves = data_by_adj_id.get(rec.id, 0)
 
@@ -242,13 +224,11 @@ class InventoryAdjustmentsGroup(models.Model):
 
     def _get_domain_manual_quants(self, base_domain):
         self.ensure_one()
-        return expression.AND(
-            [base_domain, [("product_id", "in", self.product_ids.ids)]]
-        )
+        return Domain.AND([base_domain, [("product_id", "in", self.product_ids.ids)]])
 
     def _get_domain_one_quant(self, base_domain):
         self.ensure_one()
-        return expression.AND(
+        return Domain.AND(
             [
                 base_domain,
                 [
@@ -259,7 +239,7 @@ class InventoryAdjustmentsGroup(models.Model):
 
     def _get_domain_lot_quants(self, base_domain):
         self.ensure_one()
-        return expression.AND(
+        return Domain.AND(
             [
                 base_domain,
                 [
@@ -271,7 +251,7 @@ class InventoryAdjustmentsGroup(models.Model):
 
     def _get_domain_category_quants(self, base_domain):
         self.ensure_one()
-        return expression.AND(
+        return Domain.AND(
             [
                 base_domain,
                 [
@@ -303,13 +283,13 @@ class InventoryAdjustmentsGroup(models.Model):
         if self.product_ids:
             search_filter.append(("product_id", "in", self.product_ids.ids))
             error_field = "product_id"
-            error_message = _(
+            error_message = self.env._(
                 "There are active adjustments for the requested products: %(names)s. "
                 "Blocking adjustments: %(blocking_names)s"
             )
         else:
             error_field = "location_id"
-            error_message = _(
+            error_message = self.env._(
                 "There's already an Adjustment in Process "
                 "using one requested Location: %(names)s. "
                 "Blocking adjustments: %(blocking_names)s"
@@ -394,7 +374,7 @@ class InventoryAdjustmentsGroup(models.Model):
         for rec in self:
             if not rec.action_state_to_cancel_allowed:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You can't cancel this inventory %(display_name)s.",
                         display_name=rec.display_name,
                     )
@@ -459,9 +439,10 @@ class InventoryAdjustmentsGroup(models.Model):
                         i in inventory.location_ids.ids for i in rec.location_ids.ids
                     ):
                         raise ValidationError(
-                            _(
-                                "Cannot have more than one in-progress inventory adjustment "
-                                "affecting the same location or product at the same time."
+                            self.env._(
+                                "Cannot have more than one in-progress inventory "
+                                "adjustment affecting the same location or product "
+                                "at the same time."
                             )
                         )
 
@@ -471,15 +452,26 @@ class InventoryAdjustmentsGroup(models.Model):
             if len(rec.product_ids) > 1:
                 if rec.product_selection == "one":
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "When 'Product Selection: One Product' is selected"
                             " you are only able to add one product."
                         )
                     )
                 elif rec.product_selection == "lot":
                     raise ValidationError(
-                        _(
+                        self.env._(
                             "When 'Product Selection: Lot Serial Number' is selected"
                             " you are only able to add one product."
                         )
                     )
+
+    def unlink(self):
+        for adjustment in self:
+            if adjustment.state != "draft":
+                raise UserError(  # pylint: disable=E8140
+                    self.env._(
+                        "You can only delete inventory adjustments groups in"
+                        " draft state."
+                    )
+                )
+        return super().unlink()

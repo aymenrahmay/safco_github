@@ -1,9 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-,,,,,,,
-access_aged_report_wiz,access_aged_report_wiz,model_aged_report_wiz,,1,0,0,0
-access_aged_report,access_aged_report,model_aged_report,,1,0,0,1
-access_aged_payable_report_wiz,access_aged_payable_report_wiz,model_aged_payable_report_wiz,,1,0,0,0
-access_aged_payable_report,access_aged_payable_report,model_aged_payable_report,,1,0,0,1
-aged.report.wiz_access,access_aged_payable_report,model_aged_report_wiz,,1,1,1,1
-xlsx.output.account.wiz_access,access_aged_payable_report,model_xlsx_output_account,,1,1,1,1
-aged.payable.report.wiz.wiz_access,access_aged_payable_report1,model_aged_payable_report_wiz,,1,1,1,1

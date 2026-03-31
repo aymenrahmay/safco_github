@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <template id="z_mrp_product_release_certificate_report">
             <t t-call="web.html_container">
@@ -14,20 +14,20 @@
                                     <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
                                         <center>
                                             <strong>
-                                                <span t-field="o.company_id.name"/> <br></br><br></br>Product release certificate
+                                                <span t-field="o.company_id.name"/> <br/><br/>Product release certificate
                                             </strong>
                                         </center>
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        DOC  NO:<br></br>
-                                        REV.NO:<br></br>
-                                        DATE:<br></br>
+                                        DOC  NO:<br/>
+                                        REV.NO:<br/>
+                                        DATE:<br/>
                                         PAGE:
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        FM QC 018<br></br>
-                                        1<br></br>
-                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br></br>
+                                        FM QC 018<br/>
+                                        1<br/>
+                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br/>
                                         1 of 1
                                     </td>
                                 </tr>
@@ -112,7 +112,7 @@
                                     <td colspan="2"><span/></td>
                                 </tr>
                             </table>
-                            <br></br>
+                            <br/>
                             <table style="width:1100px;" border="2">
                                 <tr style="background-color:#DCDCDC;">
                                     <td>Inspected By :</td>
@@ -136,4 +136,4 @@
 
         </template>
     </data>
-</openerp>
+</odoo>

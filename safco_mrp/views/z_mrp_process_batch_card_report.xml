@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>  1 17/07/2021 1of1
+<odoo>  1 17/07/2021 1of1
     <data>
         <template id="z_mrp_process_batch_card_report">
             <t t-call="web.html_container">
@@ -14,20 +14,20 @@
                                     <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
                                         <center>
                                             <strong>
-                                                <span t-field="o.company_id.name"/> <br></br><br></br>PROCESSING BATCH CARD
+                                                <span t-field="o.company_id.name"/> <br/><br/>PROCESSING BATCH CARD
                                             </strong>
                                         </center>
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        DOC  NO:<br></br>
-                                        REV.NO:<br></br>
-                                        DATE:<br></br>
+                                        DOC  NO:<br/>
+                                        REV.NO:<br/>
+                                        DATE:<br/>
                                         PAGE:
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        FM-QC-20<br></br>
-                                        1<br></br>
-                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br></br>
+                                        FM-QC-20<br/>
+                                        1<br/>
+                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br/>
                                         1 of 1
                                     </td>
                                 </tr>
@@ -49,7 +49,7 @@
                                     <td><span t-field="o.name"/></td>
                                 </tr>
                             </table>
-                            <br></br>
+                            <br/>
                             <table  style="width:1100px;" border="2">
                                 <tr>
                                     <td><strong>Clearance</strong></td>
@@ -76,7 +76,7 @@
                                     <td><span /></td>
                                 </tr>
                             </table>
-                            <br></br>
+                            <br/>
                             <table  style="width:1100px;" border="2">
                                 <thead style="background-color:#DCDCDC;">
                                     <td><strong>S. NO</strong></td>
@@ -91,12 +91,12 @@
                                 <t t-set="sum_qty" t-value="0"/>
                                 <t t-foreach="o.move_raw_ids" t-as="raw">
                                     <t t-set="count" t-value="count + 1"/>
-                                    <t t-set="sum_qty" t-value="sum_qty + raw.product_qty"/>
+                                    <t t-set="sum_qty" t-value="sum_qty + raw.product_uom_qty"/>
                                     <tr>
                                         <td><span t-esc="count"/></td>
                                         <td><span t-field="raw.product_id.default_code"/></td>
                                         <td><span t-field="raw.product_id.name"/></td>
-                                        <td><span t-field="raw.product_qty"/></td>
+                                        <td><span t-field="raw.product_uom_qty"/></td>
                                         <td> </td>
                                         <td></td>
                                         <td><span t-field="o.remarks"/></td>
@@ -112,7 +112,7 @@
                                     <td><span/></td>
                                 </tr>
                             </table>
-                            <br></br>
+                            <br/>
                             <table  style="width:1100px;" border="2">
                                 <thead style="background-color:#DCDCDC;">
                                     <td><strong>Temparature</strong></td>
@@ -127,7 +127,7 @@
                                     <td>  </td>
                                 </tr>
                             </table>
-                            <br></br>
+                            <br/>
                             <table style="width:550px;display:inline;" border="2">
                                 <tr>
                                     <td style="background-color:#DCDCDC;">Weighted by :</td>
@@ -150,7 +150,7 @@
                                     <td>Mixing operator</td>
                                 </tr>
                             </table>
-                            <br></br><br></br>
+                            <br/><br/>
                             <table  style="width:1100px;" border="2">
                                 <tr style="background-color:#DCDCDC;">
                                     <td><strong>Quality Manager :</strong></td>
@@ -173,4 +173,4 @@
 
         </template>
     </data>
-</openerp>
+</odoo>
