@@ -4,7 +4,7 @@
     'version': '19.0.1.0.0',
     'category': 'Human Resources',
     'summary': 'Saudi-specific HR, attendance, contract and payroll customizations',
-    'description': 'Adding saudi market required extra fields in employee profile and payroll flows.',
+    'description': "Adding saudi market required extra fields in employee profile and payroll flows.",
     'author': 'Aymen RAHMANI',
     'maintainer': 'Aymen RAHMANI',
     'license': 'AGPL-3',
