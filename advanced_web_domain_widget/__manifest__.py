@@ -10,7 +10,7 @@
 #################################################################################
 {
     'name': 'Advanced Web Domain Widget',
-    'version': '16.0.4.4.6',
+    'version': '19.0.0.0.1',
     'summary': 'Set all relational fields domain by selecting its records unsing `in, not in` operator.',
     'sequence': 10,
     'author': 'Terabits Technolab',

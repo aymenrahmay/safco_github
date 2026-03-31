@@ -11,7 +11,7 @@
 
 {
     'name': 'Simplify Access Management',
-    'version': '16.0.17.14.20',
+    'version': '19.0.0.0.1',
     'sequence': 5,
     'author': 'Terabits Technolab',
     'license': 'OPL-1',

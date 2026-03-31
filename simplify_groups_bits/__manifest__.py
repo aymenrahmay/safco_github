@@ -11,7 +11,7 @@
 
 {
     'name': 'Simplify Group Access',
-    'version': '16.0.2.0.0',
+    'version': '19.0.0.0.1',
     'summary': """ The Access Group feature simplifies access management by allowing you to create rules for specific groups of users """,
     'sequence': 10,
     'author': 'Terabits Technolab',
