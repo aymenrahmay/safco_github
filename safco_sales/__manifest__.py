@@ -8,8 +8,8 @@
     'depends': ['base','sale','account','purchase','sale_stock'],
     'data': [
             'views/views_account_payment.xml',
-            'views/views.xml',
-            'views/view_product.xml',
+            'views/sale_order_views.xml',
+            #'views/view_product.xml',
             ],
     'demo': [],
     'installable': True,

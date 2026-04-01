@@ -31,14 +31,7 @@ class SaleOrder(models.Model):
     sale_order_cost = fields.Float('Order cost', readonly=True, compute='_get_order_cost')
     approval_required = fields.Html("Approval Required", readonly=True, copy= False)
     need_gm_approval= fields.Boolean('Waiting for GM approval')
-    order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines',
-                                 states={'cancel': [('readonly', True)],
-                                         'done': [('readonly', True)],
-                                         'sent': [('readonly', True)],
-                                         'waiting_for_gm_confirmation': [('readonly', True)]
-                                         },
-                                 copy=True, auto_join=True)
-    origin_sale_order_id = fields.Many2one('sale.order', string='Origin (Sale order)', compute='_get_sales_order')
+
     state = fields.Selection([
         ('draft', 'Quotation'),
         ('waiting', 'waiting GM approval'),
@@ -52,12 +45,17 @@ class SaleOrder(models.Model):
 
 
     def gm_action_confirm(self):
-        super(SaleOrder, self).action_confirm()
-        approval_message = f"<span style='color:green;'>Order approved by: {self.env.user.partner_id.name}</span>"
-        self.write({
-            'approval_required': approval_message,
-        })
-        return True
+        orders_to_approve = self.filtered(lambda order: order.state in ('draft', 'sent', 'waiting'))
+        invalid_orders = self - orders_to_approve
+        if invalid_orders:
+            raise UserError(_('Only draft, sent, or waiting quotations can be approved by GM.'))
+
+        orders_to_approve.filtered(lambda order: order.state == 'waiting').write({'state': 'sent'})
+        result = super(SaleOrder, orders_to_approve).action_confirm()
+
+        approval_message = "<span style='color:green;'>Order approved by: %s</span>" % self.env.user.partner_id.name
+        orders_to_approve.write({'approval_required': approval_message})
+        return result
 
     @api.depends('order_line')
     def _get_order_cost(self):
@@ -82,34 +80,6 @@ class SaleOrder(models.Model):
         else:
             raise UserError(_('You can''t approve this order , only managers can approve'))
 
-
-    @api.model
-    def _verify_lines(self):
-        for line in self.order_line:
-            if line.price_unit != line.product_id.lst_price:
-                return True
-        return False
-
-
-
-
-class AssetsReport(models.Model):
-    _inherit = 'account.report'
-
-class AccountFiscalYear(models.Model):
-    _inherit = 'account.fiscal.year'
-
-class AccountReportColumn(models.Model):
-    _inherit = 'account.report.column'
-
-class AccountGroup(models.Model):
-    _inherit = 'account.group'
-class AccountReportLine(models.Model):
-    _inherit = 'account.report.line'
-
-
-
-
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -119,6 +89,4 @@ class ResPartner(models.Model):
                 raise UserError(_('You can''t archive partner when credit is bigger than zero(0) '))
             else:
                 return super(ResPartner, self).write(vals)
-
-
 

@@ -6,12 +6,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-<!--                <button name="action_quotation_send" position="after">-->
-<!--                    <button name="gm_action_confirm"-->
-<!--                            string="GM Confirm" type="object" groups="sales_team.group_sale_manager"-->
-<!--                            attrs="{'invisible': [('state', 'not in', ['waiting'])]}"/>-->
-<!--                    <button name="action_cancel" string="Cancel Quote" type="object" attrs="{'invisible': [('state', 'not in', ['waiting'])]}"/>-->
-<!--                </button>-->
+                <xpath expr="//form/header/button[@id='action_confirm']" position="before">
+                    <button name="gm_action_confirm" type="object"
+                            class="btn-primary" string="GM Confirm" invisible="state != 'waiting'"
+                    />
+                </xpath>
                 <field name="payment_term_id" position="after">
                     <field name="user_id"/>
                     <field name="warehouse_id"/>
