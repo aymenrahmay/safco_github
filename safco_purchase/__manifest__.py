@@ -6,7 +6,7 @@
     'description': 'Safco purchase customizations migrated to Odoo 19.',
     'author': 'Aymen RAHMANI',
     'license': 'LGPL-3',
-    'depends': ['account', 'purchase'],
+    'depends': ['account', 'purchase', 'account'],
     'data': [
         'views/view_product.xml',
     ],
