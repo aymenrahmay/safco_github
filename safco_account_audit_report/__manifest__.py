@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Safco Accounting : Audit report',
-    'version': '1.0',
+    'version': '19.0.0.0.1',
     'category': 'Accounting ',
     'description': "Safco accounting audit report ",
     'author': "Aymen RAHMANI",
