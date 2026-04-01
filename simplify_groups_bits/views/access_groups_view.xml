@@ -31,9 +31,9 @@
             <field name="name">access.group.tree.view</field>
             <field name="model">access.group</field>
             <field name="arch" type="xml">
-                <tree>
+                <list>
                     <field name="name"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -42,14 +42,17 @@
             <field name="name">Access Group</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">access.group</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
 
+        <!-- <menuitem id="main_menu_simplify_access_management" name="Access Studio" action="action_access_management_bits"
+                  groups="group_access_management_bits"
+                  web_icon="simplify_access_management,static/description/icon.png"/> -->
 
         <menuitem id="menu_access_group" name="Access Group"
                   action="action_access_group"
-                  parent="simplify_access_management.main_menu_simplify_access_management"/>
+                  parent="simplify_access_management.main_menu_simplify_access_management"  sequence='10'/>
 
     </data>
 </odoo>

@@ -23,7 +23,6 @@ class access_group(models.Model):
         res = super(access_group, self).write(vals)
         obj += self.access_management_ids
         for rec in obj:
-            rec.apply_by_group = True
             rec.onchange_access_group_ids()
             # rec.user_ids = rec.access_group_ids.mapped('user_ids')
         return res
