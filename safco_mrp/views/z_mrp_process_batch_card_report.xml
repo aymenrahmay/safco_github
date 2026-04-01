@@ -27,7 +27,7 @@
                                     <td style="width:15%;valign=top;">
                                         FM-QC-20<br/>
                                         1<br/>
-                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br/>
+                                        <span t-field="o.date_start"  t-options='{"widget": "date"}'/><br/>
                                         1 of 1
                                     </td>
                                 </tr>
@@ -45,7 +45,7 @@
                                 <tr>
                                     <td></td>
                                     <td><span t-field="o.product_id.name"/></td>
-                                    <td><span t-field="o.date_planned_start"/></td>
+                                    <td><span t-field="o.date_start"/></td>
                                     <td><span t-field="o.name"/></td>
                                 </tr>
                             </table>

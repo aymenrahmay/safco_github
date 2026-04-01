@@ -19,7 +19,7 @@
                                         </center>
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        FM-PD-01<br/>Rev.00<br/><span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/>
+                                        FM-PD-01<br/>Rev.00<br/><span t-field="o.date_start"  t-options='{"widget": "date"}'/>
                                     </td>
                                     <td style="width:15%;valign=top;">
                                     </td>
@@ -56,7 +56,9 @@
                                             <td><span t-field="raw.product_id.name"/></td>
                                             <td><span t-field="raw.product_uom_qty"/></td>
                                             <td><span t-field="raw.origin"/></td>
-                                            <td><span t-field="raw.name"/></td>
+                                            <td>
+<!--                                                <span t-field="raw.name"/>-->
+                                            </td>
                                         </tr>
                                     </t>
                             </table>

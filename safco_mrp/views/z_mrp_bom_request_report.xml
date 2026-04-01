@@ -27,7 +27,7 @@
                                     <td style="width:15%;valign=top;">
                                         FM-QC-25<br/>
                                         0<br/>
-                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br/>
+                                        <span t-field="o.date_start"  t-options='{"widget": "date"}'/><br/>
                                         1 of 1
                                     </td>
                                 </tr>
@@ -40,7 +40,7 @@
                                     <td style="width:15%;"><strong>Request No.</strong></td>
                                     <td style="width:35%;"> </td>
                                     <td style="width:15%;"><strong>Date :</strong></td>
-                                    <td style="width:35%;"><span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/></td>
+                                    <td style="width:35%;"><span t-field="o.date_start"  t-options='{"widget": "date"}'/></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Product Name :</strong></td>
@@ -78,7 +78,9 @@
                                         <td><span t-field="raw.product_id.name"/></td>
                                         <td><span t-field="raw.product_uom_qty"/></td>
                                         <td><span t-field="raw.product_uom_qty"/></td>
-                                        <td><span t-field="raw.name"/></td>
+                                        <td>
+<!--                                            <span t-field="raw.name"/>-->
+                                        </td>
                                     </tr>
                                 </t>
                             </table><br/><br/>
