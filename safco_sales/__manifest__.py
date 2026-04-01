@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Sale safco',
-    'version': '19.0.0.1',
+    'version': '19.0.0.2',
     'category': 'Sale ',
     'description': "Sale safco ",
     'author': "Aymen RAHMANI",
@@ -9,7 +9,7 @@
     'data': [
             'views/views_account_payment.xml',
             'views/sale_order_views.xml',
-            #'views/view_product.xml',
+            'views/view_product.xml',
             ],
     'demo': [],
     'installable': True,
