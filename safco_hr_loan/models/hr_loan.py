@@ -62,7 +62,7 @@ class HrLoan(models.Model):
 
     def action_approve(self):
         for loan in self:
-            contract_obj = self.env['hr.contract'].search([('employee_id', '=', loan.employee_id.id), ('state', 'in', ['open', 'close'])], limit=1)
+            contract_obj = loan.employee_id._get_contracts(fields.Date.today(), fields.Date.today()).get(loan.employee_id.id)
             if not contract_obj:
                 raise UserError(_('You must define a contract for the employee.'))
             if not loan.loan_lines:

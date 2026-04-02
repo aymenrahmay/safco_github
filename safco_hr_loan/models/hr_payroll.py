@@ -18,14 +18,7 @@ class HrPayslip(models.Model):
             payslip._compute_input_line_ids()
         return payslips
 
-    def get_sum_lo_lines(self, payslip):
-        lo_sum = 0
-        for line in payslip.input_line_ids:
-            if line.input_type_id.code == 'Loan':
-                lo_sum += line.amount
-        return lo_sum
-
-    @api.depends('employee_id', 'contract_id', 'struct_id', 'date_from', 'date_to', 'struct_id')
+    @api.depends('employee_id',  'date_from', 'date_to')
     def _compute_input_line_ids(self):
         res = super()._compute_input_line_ids() or []
         for slip in self:
@@ -44,7 +37,6 @@ class HrPayslip(models.Model):
         for loan in loans:
             for loan_line in loan.loan_lines.filtered(lambda line: self.date_from <= line.date <= self.date_to and not line.paid):
                 loan_inputs.append({
-                    'contract_id': self.contract_id.id,
                     'name': 'Loan of : %s , amount %s From : %s' % (loan.employee_id.name, loan_line.amount, loan.name),
                     'amount': loan_line.amount,
                     'input_type_id': self.env.ref('safco_hr_loan.input_loan').id,
