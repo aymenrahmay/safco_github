@@ -22,6 +22,7 @@ class HrPayslip(models.Model):
     def _compute_input_line_ids(self):
         res = super()._compute_input_line_ids() or []
         for slip in self:
+            print ('HHHHHHHHHHHHHHHHHHHHHHH')
             loan_inputs = slip.get_inputs()
             if loan_inputs:
                 existing_loan_lines = slip.input_line_ids.filtered(lambda l: l.loan_line_id)
@@ -39,7 +40,7 @@ class HrPayslip(models.Model):
                 loan_inputs.append({
                     'name': 'Loan of : %s , amount %s From : %s' % (loan.employee_id.name, loan_line.amount, loan.name),
                     'amount': loan_line.amount,
-                    'input_type_id': self.env.ref('safco_hr_loan.input_loan').id,
+                    'input_type_id': self.env.ref('l10n_sa_hr_payroll.l10n_sa_input_loan_deduction').id,
                     'loan_line_id': loan_line.id,
                 })
         return loan_inputs

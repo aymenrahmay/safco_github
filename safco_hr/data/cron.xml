@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <data>
-        <record model="ir.cron" id="get_attendences_employees">
+       <record id="get_attendences_employees" model="ir.cron">
             <field name="name">Attendances: Get attendances from devices</field>
+            <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="doall" eval="False"/>
-            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
             <field name="state">code</field>
-            <field name="nextcall" eval="datetime.now(pytz.timezone('UTC')).strftime('%Y-%m-%d 23:50:59')" />
+            <field name="nextcall" eval="datetime.now(pytz.UTC).strftime('%Y-%m-%d 23:50:59')"/>
             <field name="code">model.cron_get_attendences_from_remote_machines(False)</field>
+            <field name="active" eval="True"/>
         </record>
 
     </data>
