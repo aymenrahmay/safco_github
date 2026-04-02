@@ -13,15 +13,11 @@
         'security/ir.model.access.csv',
         'data/data.xml',
         'data/cron.xml',
-        'data/hr_contract_sequence.xml',
-        'views/hr_attendance_view.xml',
-        'views/hr_contract_view.xml',
-        'views/hr_payslip_run.xml',
-        'views/view_resource_calendar.xml',
         'views/hr_employee_view.xml',
-        'wizard/normalize_attendences_views.xml',
+        'views/hr_attendance_view.xml',
+        #'views/hr_contract_view.xml',
     ],
-    'images': ['static/description/banner.png'],
+
     'installable': True,
     'application': False,
 }
