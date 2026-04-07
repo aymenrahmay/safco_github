@@ -7,7 +7,7 @@
     'category': 'Human Resources/Payroll',
     'author': 'Aymen RAHMANI',
     'maintainer': 'Aymen RAHMANI',
-    'license': 'AGPL-3',
+
     'depends': ['base', 'hr_payroll', 'hr', 'account', 'l10n_sa_hr_payroll'],
     'data': [
         'security/ir.model.access.csv',
