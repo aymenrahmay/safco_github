@@ -14,9 +14,9 @@ class access_management(models.Model):
     readonly = fields.Boolean('Read-Only')
     active = fields.Boolean('Active', default=True)
 
-    hide_menu_ids = fields.Many2many('menu.item', 'access_management_menu_rel_ah', 'access_management_id', 'menu_id',
-                                     'Hide Menu',
-                                     help="The menu or submenu added on above list will be hidden from the defined users.")
+    #hide_menu_ids = fields.Many2many('menu.item', 'access_management_menu_rel_ah', 'access_management_id', 'menu_id',
+    #                                 'Hide Menu',
+    #                                 help="The menu or submenu added on above list will be hidden from the defined users.")
     hide_field_ids = fields.One2many('hide.field', 'access_management_id', 'Hide Field', copy=True)
 
     remove_action_ids = fields.One2many('remove.action', 'access_management_id', 'Remove Action', copy=True)
@@ -60,8 +60,8 @@ class access_management(models.Model):
     def _count_total_rules(self):
         for rec in self:
             rule = 0
-            rule = rule + len(rec.hide_menu_ids) + len(rec.hide_field_ids) + len(rec.remove_action_ids) + len(
-                rec.access_domain_ah_ids) + len(rec.hide_view_nodes_ids) + len(rec.hide_filters_groups_ids) + len(rec.hide_chatter_ids) + int(rec.hide_export) + int(rec.hide_import) + int(rec.hide_spreadsheet) + int(rec.hide_add_property) + int(rec.hide_chatter) + int(rec.hide_send_mail) + int(rec.hide_log_notes) + int(rec.hide_schedule_activity) + int (rec.disable_login)
+            #rule = rule + len(rec.hide_menu_ids) + len(rec.hide_field_ids) + len(rec.remove_action_ids) + len(
+                #rec.access_domain_ah_ids) + len(rec.hide_view_nodes_ids) + len(rec.hide_filters_groups_ids) + len(rec.hide_chatter_ids) + int(rec.hide_export) + int(rec.hide_import) + int(rec.hide_spreadsheet) + int(rec.hide_add_property) + int(rec.hide_chatter) + int(rec.hide_send_mail) + int(rec.hide_log_notes) + int(rec.hide_schedule_activity) + int (rec.disable_login)
             rec.total_rules = rule
 
     def action_show_rules(self):

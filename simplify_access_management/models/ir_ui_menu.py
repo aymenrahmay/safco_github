@@ -8,13 +8,13 @@ class ir_ui_menu(models.Model):
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         ids = super(ir_ui_menu, self).search_fetch(domain, field_names, offset=0, limit=None, order=order)
         all_menu =ids.ids
-        try:
-            cids = request.httprequest.cookies.get('cids') and request.httprequest.cookies.get('cids').split('-')[0] or self.env.company.id
-            for menu_id in self.env.user.access_management_ids.filtered(lambda line: line.is_apply_on_without_company == True or int(cids) in line.company_ids.ids).mapped('hide_menu_ids.menu_id'):
-                if menu_id in all_menu:
-                    all_menu.remove(menu_id)
-        except:
-            pass
+        # try:
+        #     cids = request.httprequest.cookies.get('cids') and request.httprequest.cookies.get('cids').split('-')[0] or self.env.company.id
+        #     for menu_id in self.env.user.access_management_ids.filtered(lambda line: line.is_apply_on_without_company == True or int(cids) in line.company_ids.ids).mapped('hide_menu_ids.menu_id'):
+        #         if menu_id in all_menu:
+        #             all_menu.remove(menu_id)
+        # except:
+        #     pass
         return self.browse(all_menu)
    
     
