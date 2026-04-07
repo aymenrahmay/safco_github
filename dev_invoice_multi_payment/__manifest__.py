@@ -11,7 +11,7 @@
     'name': 'Multiple Invoice Payment | Invoice Multi Payment | Invoice payments',
     'version': '19.0.1.1',
     'sequence':1,
-    "category": 'Accounting',
+    "category": 'Accounting' ,
     'description': """
 App will allow multiple invoice payment from payment and invoice screen.
     """,
