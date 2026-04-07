@@ -161,7 +161,7 @@ class access_management(models.Model):
             'hide_schedule_activity': hide_schedule_activity
         }
 
-    def is_spread_sheet_available(self, model=None):
+    def is_spread_sheet_available(self, action_model, action_id):
         return False
 
     def is_add_property_available(self, model=None):
