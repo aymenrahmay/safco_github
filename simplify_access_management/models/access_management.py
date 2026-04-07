@@ -160,27 +160,33 @@ class access_management(models.Model):
             'hide_log_notes': hide_log_notes,
             'hide_schedule_activity': hide_schedule_activity
         }
+
+    def is_spread_sheet_available(self, model=None):
+        return False
+
+    def is_add_property_available(self, model=None):
+        return False
    
-    def is_spread_sheet_available(self, action_model, action_id):
-        if action_model and action_id:
-            model = self.env[action_model].sudo().browse(action_id).res_model
-            hide_spreadsheet = search_data(self, self._name, model, ('hide_spreadsheet','=',True), 'AND',limit=1)
-            
-            if hide_spreadsheet:
-                return True
-            
-            if model:
-                restrict_spreadsheet = search_data(self, 'remove.action', model, ('restrict_spreadsheet','=',True), 'AND')
-                if restrict_spreadsheet:
-                    return True
-
-        return False
-
-    def is_add_property_available(self, model):
-        hide_property = search_data(self, self._name, model, ('hide_add_property','=',True), 'AND')
-        if hide_property:
-            return True
-        return False
+    # def is_spread_sheet_available(self, action_model, action_id):
+    #     if action_model and action_id:
+    #         model = self.env[action_model].sudo().browse(action_id).res_model
+    #         hide_spreadsheet = search_data(self, self._name, model, ('hide_spreadsheet','=',True), 'AND',limit=1)
+    #
+    #         if hide_spreadsheet:
+    #             return True
+    #
+    #         if model:
+    #             restrict_spreadsheet = search_data(self, 'remove.action', model, ('restrict_spreadsheet','=',True), 'AND')
+    #             if restrict_spreadsheet:
+    #                 return True
+    #
+    #     return False
+    #
+    # def is_add_property_available(self, model):
+    #     hide_property = search_data(self, self._name, model, ('hide_add_property','=',True), 'AND')
+    #     if hide_property:
+    #         return True
+    #     return False
 
     def get_hidden_field(self, model=False):
         if model:

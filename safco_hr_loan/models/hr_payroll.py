@@ -22,7 +22,6 @@ class HrPayslip(models.Model):
     def _compute_input_line_ids(self):
         res = super()._compute_input_line_ids() or []
         for slip in self:
-            print ('HHHHHHHHHHHHHHHHHHHHHHH')
             loan_inputs = slip.get_inputs()
             if loan_inputs:
                 existing_loan_lines = slip.input_line_ids.filtered(lambda l: l.loan_line_id)
