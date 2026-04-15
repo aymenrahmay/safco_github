@@ -10,7 +10,7 @@
         Multi invoice,easy payment,like version 8, 9,multipile invoice,Multupile,Invoice,Payment,Payment invoice, multipile,
         multipile invoice, payment invoice,Multipile Payment,Payment, multipile, invoice multipile, odoo invoice, invoice odod, multipile odoo invoice,
         customer invoice, Customer Invoice, MULTIPILE, INVOICE, MULTIPILE INVOICE, ODOO MULTIPILE INVOICE, invoice, multipile  ''',
-    'version': '16.0.0.1',
+    'version': '19.0.1.0.0',
     'live_test_url': 'https://youtu.be/Xrh48sca9xw',
     'author': 'Geo Technosoft',
     'website': 'http://www.geotechnosoft.com',
