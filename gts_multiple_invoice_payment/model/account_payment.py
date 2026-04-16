@@ -219,6 +219,7 @@ class AccountPayment(models.Model):
                 'amount_currency': remaining_amount_currency,
                 'balance': remaining_balance,
             })
+
             split_lines.append(vals)
 
         line_vals_per_type['counterpart_lines'] = split_lines
