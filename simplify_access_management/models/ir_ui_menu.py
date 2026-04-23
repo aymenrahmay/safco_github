@@ -29,6 +29,7 @@ class ir_ui_menu(models.Model):
             visible_ids.difference_update(hidden_menu_ids)
         return frozenset(visible_ids)
 
+
     def _load_menus_blacklist(self):
         hidden_menu_ids = self._get_hidden_menu_ids_for_current_user()
         return list(set(super()._load_menus_blacklist()) | set(hidden_menu_ids))
