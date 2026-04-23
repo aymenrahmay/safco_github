@@ -57,7 +57,7 @@
                         <notebook>
                             <page string='Hide Menu'>
                                 <field name="self_module_menu_ids" widget="many2many_tags" invisible="1"/>
-<!--                                <field name='hide_menu_ids' domain="[('menu_id','not in',self_module_menu_ids)]"/>-->
+                               <field name='hide_menu_ids' />
                                 <p role="alert"
                                    class="fa fa-info-circle  alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden"
                                    style="font-size: 15px;letter-spacing: 1px;">The menu or submenu added on above list
