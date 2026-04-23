@@ -21,6 +21,7 @@ class ir_ui_menu(models.Model):
         )
         return access_rules.mapped('hide_menu_ids').ids
 
+
     @api.model
     def _visible_menu_ids(self, debug=False):
         visible_ids = set(super()._visible_menu_ids(debug=debug))
