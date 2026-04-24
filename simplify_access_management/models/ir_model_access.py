@@ -1,33 +1,24 @@
 # -*- coding: utf-8 -*-
 import logging
 from odoo.http import request
-from odoo import api, fields, models, tools,_
-from odoo.exceptions import Warning, ValidationError,AccessError
+from odoo import api, fields, models, tools, _
+from odoo.exceptions import ValidationError, AccessError
+from odoo.tools import SQL, Query
+
 _logger = logging.getLogger(__name__)
+
 
 class ir_model_access(models.Model):
     _inherit = 'ir.model.access'
 
 
-
-    # The context parameter is useful when the method translates error messages.
-    # But as the method raises an exception in that case,  the key 'lang' might
-    # not be really necessary as a cache key, unless the `ormcache_context`
-    # decorator catches the exception (it does not at the moment.)
     @api.model
-    @tools.ormcache_context('self.env.uid', 'self.env.su', 'model', 'mode', 'raise_exception', keys=('lang',))
     def check(self, model, mode='read', raise_exception=True):
-        if model == 'mail.thread':
-            return True
-        
-        if self.env.su or model == 'ir.model':
+        if self.env.su:
             # User root have all accesses
             return True
 
         assert isinstance(model, str), 'Not a model name: %s' % (model,)
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-
-        # TransientModel records have no access rights, only an implicit access rule
         is_model_exists = True
         if model not in self.env:
             _logger.error('Missing model %s', model)
@@ -35,21 +26,22 @@ class ir_model_access(models.Model):
 
         has_access = model in self._get_allowed_models(mode)
         
+        
         """
             This part is writen to by pass base access rule and apply dynamic rule of access management rule,
             In case of any record found in access management.
         """
         try:
-            value = self._cr.execute(SQL(
+            value = self.env.cr.execute(SQL(
                 """SELECT value from ir_config_parameter where key='uninstall_simplify_access_management' """))
-            value = self._cr.fetchone()
+            value = self.env.cr.fetchone()
             if not value:
                 if is_model_exists:
                 
-                    self._cr.execute(SQL("SELECT id FROM ir_model WHERE model='%s'" % model))
-                    model_numeric_id = self._cr.fetchone()[0]
+                    self.env.cr.execute(SQL("SELECT id FROM ir_model WHERE model='%s'" % model))
+                    model_numeric_id = self.env.cr.fetchone()[0]
                     if model_numeric_id and isinstance(model_numeric_id, int) and self.env.user:
-                        self._cr.execute(SQL("""
+                        self.env.cr.execute(SQL("""
                                         SELECT dm.id
                                         FROM access_domain_ah as dm
                                         WHERE dm.model_id=%s AND dm.apply_domain AND dm.access_management_id 
@@ -61,8 +53,9 @@ class ir_model_access(models.Model):
                                                 WHERE amusr.user_id=%s))
                                         """% (model_numeric_id, self.env.user.id)))
                     
+                        
                         access_domain_ah_ids = self.env['access.domain.ah'].sudo().browse(
-                            row[0] for row in self._cr.fetchall())
+                            row[0] for row in self.env.cr.fetchall())
                         access_domain_ah_ids -= access_domain_ah_ids.filtered(lambda x: x.access_management_id.is_apply_on_without_company == False and self.env.company.id not in x.access_management_id.company_ids.ids)
                         if mode == 'read':
                             access_domain_ah_ids = access_domain_ah_ids.filtered(lambda x: x.read_right)
@@ -72,91 +65,37 @@ class ir_model_access(models.Model):
                             access_domain_ah_ids = access_domain_ah_ids.filtered(lambda x: x.write_right)
                         elif mode == 'unlink':
                             access_domain_ah_ids = access_domain_ah_ids.filtered(lambda x: x.delete_right)
-
                         if access_domain_ah_ids:
                             has_access = bool(access_domain_ah_ids)
-        except:
-            pass                    
+            
+                    read_value = True
+                    self.env.cr.execute(SQL("SELECT state FROM ir_module_module WHERE name='simplify_access_management'"))
+                    data = self.env.cr.fetchone() or False
+                    if data and data[0] != 'installed':
+                        read_value = False
                     
-
-
-        # We check if a specific rule exists
-        self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
-                              FROM ir_model_access a
-                              JOIN ir_model m ON (m.id = a.model_id)
-                              JOIN res_groups_users_rel gu ON (gu.gid = a.group_id)
-                             WHERE m.model = %s
-                               AND gu.uid = %s
-                               AND a.active IS TRUE""".format(mode=mode),
-                         (model, self._uid,))
-        r = self._cr.fetchone()[0]
-
-        if not r:
-            # there is no specific rule. We check the generic rule
-            self._cr.execute("""SELECT MAX(CASE WHEN perm_{mode} THEN 1 ELSE 0 END)
-                                  FROM ir_model_access a
-                                  JOIN ir_model m ON (m.id = a.model_id)
-                                 WHERE a.group_id IS NULL
-                                   AND m.model = %s
-                                   AND a.active IS TRUE""".format(mode=mode),
-                             (model,))
-            r = self._cr.fetchone()[0]
-
-        if not r and raise_exception:
-            groups = '\n'.join('\t- %s' % g for g in self.group_names_with_access(model, mode))
-            document_kind = self.env['ir.model']._get(model).name or model
-            msg_heads = {
-                # Messages are declared in extenso so they are properly exported in translation terms
-                'read': _("You are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'write':  _("You are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'create': _("You are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-                'unlink': _("You are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
-            }
-            operation_error = msg_heads[mode]
-
-            if groups:
-                group_info = _("This operation is allowed for the following groups:\n%(groups_list)s", groups_list=groups)
-            else:
-                group_info = _("No group currently allows this operation.")
-
-            resolution_info = _("Contact your administrator to request access if necessary.")
-
-            _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
-            msg = """{operation_error}
-
-{group_info}
-
-{resolution_info}""".format(
-                operation_error=operation_error,
-                group_info=group_info,
-                resolution_info=resolution_info)
-
-            raise AccessError(msg)
-
-        try:
-            read_value = True
-            self._cr.execute(SQL("SELECT state FROM ir_module_module WHERE name='simplify_access_management'"))
-            data = self._cr.fetchone() or False
-            if data and data[0] != 'installed':
-                read_value = False
-
-            cids = int(request.httprequest.cookies.get('cids') and request.httprequest.cookies.get('cids').split('-')[0] or request.env.company.id)
-            if self.env.user.id and read_value and request.httprequest.cookies.get('cids'):
-                
-                self._cr.execute(SQL("""SELECT access_management_id FROM access_management_comapnay_rel WHERE company_id = %s"""% cids))
-                a = self._cr.fetchall()
-                if a:
-                    self._cr.execute(SQL("""SELECT access_management_id FROM access_management_users_rel_ah WHERE user_id = %s AND access_management_id in %s""" % (self.env.user.id,tuple([i[0] for i in a] + [0]))))
-                    a = self._cr.fetchall()
-                    if a:
-                        self._cr.execute(SQL("""SELECT id FROM access_management WHERE active='t' AND id in %s AND readonly = True""", (
+                    cids = int(request.httprequest.cookies.get('cids') and request.httprequest.cookies.get('cids').split('-')[0] or request.env.company.id)
+        
+                    if self.env.user.id and read_value and cids:
+                    
+                        self.env.cr.execute(SQL("""SELECT access_management_id FROM access_management_comapnay_rel WHERE company_id = %s"""% cids))
+                        a = self.env.cr.fetchall()
+                        if a:
+                            
+                            self.env.cr.execute(SQL("""SELECT access_management_id FROM access_management_users_rel_ah WHERE user_id = %s AND access_management_id in %s""" % (self.env.user.id,tuple([i[0] for i in a] + [0]))))
+                            a = self.env.cr.fetchall()
+                            if a:
+                                self.env.cr.execute(SQL("""SELECT id FROM access_management WHERE active='t' AND id in %s AND readonly = True""", (
                                     tuple([i[0] for i in a] + [0]))))
-                        a = self._cr.fetchall()
-                if bool(a):
-                    if mode != 'read':  
-                        return False
+                                a = self.env.cr.fetchall()
+                        if bool(a):
+                            if mode != 'read':
+                                mode = 'read'
+
         except:
             pass
 
+        if not has_access and raise_exception:
+            raise self._make_access_error(model, mode) from None
 
         return has_access

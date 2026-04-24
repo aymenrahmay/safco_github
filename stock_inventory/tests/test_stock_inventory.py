@@ -2,12 +2,13 @@
 # License AGPL-3 - See http://www.gnu.org/licenses/agpl-3.0.html
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import TransactionCase
+
+from odoo.addons.base.tests.common import BaseCommon
 
 
-class TestStockInventory(TransactionCase):
+class TestStockInventory(BaseCommon):
     def setUp(self):
-        super(TestStockInventory, self).setUp()
+        super().setUp()
         self.env.company.stock_inventory_auto_complete = False
         self.quant_model = self.env["stock.quant"]
         self.move_model = self.env["stock.move.line"]
@@ -17,14 +18,16 @@ class TestStockInventory(TransactionCase):
         self.product = self.env["product.product"].create(
             {
                 "name": "Product 1 test",
-                "type": "product",
+                "type": "consu",
+                "is_storable": True,
                 "tracking": "lot",
             }
         )
         self.product2 = self.env["product.product"].create(
             {
                 "name": "Product 1 test",
-                "type": "product",
+                "type": "consu",
+                "is_storable": True,
                 "categ_id": self.product_categ.id,
             }
         )
@@ -49,14 +52,12 @@ class TestStockInventory(TransactionCase):
                 "company_id": self.env.company.id,
             }
         )
-        self.location_src = self.env.ref("stock.stock_location_locations_virtual")
         self.location_dst = self.env.ref("stock.stock_location_customers")
 
         self.location1 = self.location_model.create(
             {
                 "name": "Location 1",
                 "usage": "internal",
-                "location_id": self.location_src.id,
             }
         )
         self.location2 = self.location_model.create(
@@ -142,7 +143,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 3)
         self.assertEqual(inventory1.count_stock_quants_string, "2 / 3")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 8)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 8)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_1.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location1.id)
@@ -176,7 +177,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 2)
         self.assertEqual(inventory1.count_stock_quants_string, "1 / 2")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 26)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 26)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_3.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location3.id)
@@ -226,7 +227,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 2)
         self.assertEqual(inventory1.count_stock_quants_string, "1 / 2")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 26)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 26)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_3.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location3.id)
@@ -276,7 +277,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 1)
         self.assertEqual(inventory1.count_stock_quants_string, "0 / 1")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 26)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 26)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_3.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location3.id)
@@ -310,7 +311,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 1)
         self.assertEqual(inventory1.count_stock_quants_string, "0 / 1")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 26)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 26)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product2.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location3.id)
         inventory1.action_state_to_done()
@@ -354,7 +355,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 1)
         self.assertEqual(inventory1.count_stock_quants_string, "0 / 1")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 8)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 8)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_1.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location1.id)
@@ -399,7 +400,7 @@ class TestStockInventory(TransactionCase):
         self.assertEqual(inventory1.count_stock_moves, 1)
         self.assertEqual(inventory1.count_stock_quants, 2)
         self.assertEqual(inventory1.count_stock_quants_string, "1 / 2")
-        self.assertEqual(inventory1.stock_move_ids.qty_done, 26)
+        self.assertEqual(inventory1.stock_move_ids.quantity, 26)
         self.assertEqual(inventory1.stock_move_ids.product_id.id, self.product.id)
         self.assertEqual(inventory1.stock_move_ids.lot_id.id, self.lot_3.id)
         self.assertEqual(inventory1.stock_move_ids.location_id.id, self.location3.id)

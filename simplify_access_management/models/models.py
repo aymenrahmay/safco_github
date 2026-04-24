@@ -1,12 +1,12 @@
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, AccessError
-from bs4 import BeautifulSoup
-from lxml import etree
-from odoo.osv import expression
+# from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
-from odoo.addons.advanced_web_domain_widget.models.domain_prepare import prepare_domain_v2,compute_domain
+from odoo.addons.advanced_web_domain_widget.models.domain_prepare import compute_domain
+# from odoo.addons.advanced_web_domain_widget.models.domain_prepare import prepare_domain_v2,compute_domain
 from odoo.tools.sql import SQL
 from .query_prepare import search_data
+from odoo.fields import Domain
 
 
 
@@ -18,6 +18,12 @@ class BaseModel(models.AbstractModel):
         res = super().get_views(views, options)
         form_toolbar = res['views'].get('form', {}).get('toolbar') or False
         tree_toolbar = res['views'].get('list', {}).get('toolbar') or False
+        # remove_action = self.env['remove.action'].sudo().search(
+        #     [('access_management_id.active', '=', True),
+        #      ('access_management_id', 'in', self.env.user.access_management_ids.ids),
+        #      ('model_id.model', '=', self._name)])
+        
+        # remove_action -= remove_action.filtered(lambda x: x.access_management_id.is_apply_on_without_company == False and self.env.company.id not in x.access_management_id.company_ids.ids)
         remove_action = search_data(self, 'remove.action', search_model=self._name)
         if remove_action:
             if form_toolbar or tree_toolbar:
@@ -41,12 +47,26 @@ class BaseModel(models.AbstractModel):
                     prints = [rec for rec in res['views']['list']['toolbar']['print'] if
                             rec.get('id', False) not in remove_print_action]
                     res['views']['list']['toolbar']['print'] = prints
+
+            # for view_data in set(remove_action.mapped('view_data_ids.techname')):
+            #     if res['views'].get(view_data):
+            #         res['views'].pop(view_data)
+            #     for view_data_list in views:
+            #         if view_data in view_data_list:
+            #             views.pop(views.index(view_data_list))
+                # for view_data_list in views:
+                #     if view_data == view_data_list[1]:
+                #         views.pop(views.index(view_data_list))
       
         return res
 
     @api.model
     def load_views(self, views, options=None):
         actions_and_prints = []
+        # remove_action = self.env['remove.action'].sudo().search([('access_management_id.active', '=', True),
+        #                                         ('access_management_id', 'in',self.env.user.access_management_ids.ids),
+        #                                         ('model_id.model', '=', self._name)])
+        # remove_action -= remove_action.filtered(lambda x: x.access_management_id.is_apply_on_without_company == False and self.env.company.id not in x.access_management_id.company_ids.ids)
         remove_action = search_data(self, 'remove.action', search_model=self._name)
         for access in remove_action:
             actions_and_prints = actions_and_prints + access.mapped('report_action_ids.action_id').ids
@@ -84,16 +104,15 @@ class BaseModel(models.AbstractModel):
         if view_type == 'form':
             access_management_id = search_data(self, 'access.management', condition=('hide_chatter', '=', True),operator='AND', limit=1)
             if access_management_id:
-                for div in arch.xpath("//div[@class='oe_chatter']"):
-                    div.getparent().remove(div)
+                for chatter_path in arch.xpath("//chatter"):
+                    chatter_path.getparent().remove(chatter_path)
             else:
                 hide_chatter_id = search_data(self, 'hide.chatter', search_model=self._name, condition=('hide_chatter', '=', True), operator='AND', limit=1)
-                
                 if hide_chatter_id:
-                    for chatter_path in arch.xpath("//div[@class='oe_chatter']"):
+                    for chatter_path in arch.xpath("//chatter"):
                         chatter_path.getparent().remove(chatter_path)
-           
-        if view_type in ['kanban', 'tree','calendar']:
+
+        if view_type in ['kanban', 'list']:
             restrict_import = search_data(self, 'access.management', condition=('hide_import', '=', True), operator='AND', limit=1)
             if restrict_import or (access_model_recs and access_model_recs.filtered(lambda x: x.restrict_import)):
                 doc = arch
@@ -108,8 +127,18 @@ class BaseModel(models.AbstractModel):
                 arch = doc
 
         if readonly_access_id:
-            if view_type in ['form', 'tree', 'kanban', 'gantt','pivot','graph']:
+            if view_type in ['form', 'list', 'kanban', 'gantt','pivot','graph']:
                 arch.attrib.update({'create': 'false', 'delete': 'false', 'edit': 'false'})
+        # if readonly_access_id:
+        #     if view_type == 'form':
+        #         arch.attrib.update({'create': 'false', 'delete': 'false', 'edit': 'false'})
+
+        #     if view_type == 'list':
+        #         arch.attrib.update({'create': 'false', 'delete': 'false', 'edit': 'false'})
+
+        #     if view_type == 'kanban':
+        #         arch.attrib.update({'create': 'false', 'delete': 'false', 'edit': 'false'})
+
         else:
 
             if access_model_recs:
@@ -124,12 +153,12 @@ class BaseModel(models.AbstractModel):
                     if access_model.restrict_delete:
                         delete = 'false'
 
-                if view_type in ['form', 'tree', 'kanban', 'gantt','pivot','graph']:
+                if view_type in ['form', 'list', 'kanban', 'gantt','pivot','graph']:
                     arch.attrib.update({'create': create, 'delete': delete, 'edit': edit})
 
                 elif view_type == 'calendar':
-                    if 'js_class' in arch.attrib:
-                        arch.attrib.update({'js_class':''})
+                    # if 'js_class' in arch.attrib:
+                    #     arch.attrib.update({'js_class':''})
                     arch.attrib.update({'create': create, 'delete': delete, 'edit': edit})
 
             if access_recs:
@@ -144,131 +173,24 @@ class BaseModel(models.AbstractModel):
                     if access_rec.delete_right:
                         delete = 'true'
 
-                if view_type in ['form', 'tree', 'kanban', 'gantt','pivot','graph']:
-                            arch.attrib.update({'create': create, 'delete': delete, 'edit': edit})
+                if view_type in ['form', 'list', 'kanban', 'gantt','pivot','graph']:
+                    arch.attrib.update({'create': create, 'delete': delete, 'edit': edit})
 
                 elif view_type == 'calendar':
-                    if 'js_class' in arch.attrib:
-                        arch.attrib.update({'js_class':''})
+                    # if 'js_class' in arch.attrib:
+                    #     arch.attrib.update({'js_class':''})
                     arch.attrib.update({'create': create, 'delete': delete, 'edit': edit})
 
         return arch, view
-
-    # @api.model
-    # def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-    #     res = super().fields_view_get(view_id, view_type, toolbar, submenu)
-    #     access_management_obj = self.env['access.management']
-    #     cids = request.httprequest.cookies.get('cids') and request.httprequest.cookies.get('cids').split(',')[0] or request.env.company.id
-    #     readonly_access_id = access_management_obj.search([('company_ids','in',int(cids)),('active','=',True),('user_ids','in',self.env.user.id),('readonly','=',True)])
-
-    #     access_recs = self.env['access.domain.ah'].search([('access_management_id.company_ids','in',self.env.company.id),('access_management_id.user_ids','in',self.env.user.id),('access_management_id.active','=',True),('model_id.model','=',res['model'])])
-    #     access_model_recs = self.env['remove.action'].search([('access_management_id.company_ids','in',self.env.company.id),('access_management_id.user_ids','in',self.env.user.id),('access_management_id.active','=',True),('model_id.model','=',res['model'])])
-
-    #     if view_type == 'form':
-    #         # access_fields_recs = self.env['hide.field'].search([('access_management_id.company_ids','in',self.env.company.id),('access_management_id.user_ids','in',self.env.user.id),('access_management_id.active','=',True),('model_id.model','=',res['model']),('external_link','=',True)])
-    #         # if access_fields_recs:
-    #         #     doc = etree.XML(res['arch'])
-    #         #     for field in access_fields_recs.mapped('field_id'):
-    #         #         if field.ttype in ['many2many','many2one']:
-    #         #             for field_ele in doc.xpath("//field[@name='" + field.name + "']"):
-    #         #                 options = 'options' in field_ele.attrib.keys() and field_ele.attrib['options'] or "{}"
-    #         #                 options = ast.literal_eval(options)
-    #         #                 options.update({'no_create': True,'no_create_edit':True,'no_open':True})
-    #         #                 field_ele.attrib.update({'options':str(options)})
-    #         #     res['arch'] = etree.tostring(doc, encoding='unicode')        
-    #         if access_management_obj.search([('company_ids','in',self.env.company.id),('active','=',True),('user_ids','in',self.env.user.id),('hide_chatter','=',True)],limit=1).id  or self.env['remove.action'].search([('access_management_id.company_ids','in',self.env.company.id),('access_management_id.active','=',True),('access_management_id.user_ids','in',self.env.user.id),('model_id.model','=',res['model']),('restrict_chatter','=',True)],limit=1):
-    #             doc = etree.XML(res['arch'])
-    #             for div in doc.xpath("//div[@class='oe_chatter']"):
-    #                     div.getparent().remove(div)
-    #             res['arch'] = etree.tostring(doc, encoding='unicode')
-
-    #     if readonly_access_id:
-    #         if view_type == 'form':
-    #             doc = etree.XML(res['arch'])
-    #             doc.attrib.update({'create':'false', 'delete':'false','edit':'false'})
-
-    #             res['arch'] = etree.tostring(doc, encoding='unicode')
-    #         if view_type == 'tree':
-    #             doc = etree.XML(res['arch'])
-    #             doc.attrib.update({'create':'false', 'delete':'false','edit':'false'})
-
-    #             res['arch'] = etree.tostring(doc, encoding='unicode')
-
-    #         if view_type == 'kanban':
-    #             doc = etree.XML(res['arch'])
-    #             doc.attrib.update({'create':'false', 'delete':'false','edit':'false'})
-
-    #             res['arch'] = etree.tostring(doc, encoding='unicode').replace('&amp;quot;','&quot;')
-
-    #     else:
-
-    #         if access_model_recs:
-    #             delete = 'true'
-    #             edit = 'true'
-    #             create = 'true'
-    #             for access_model in access_model_recs:
-    #                 if access_model.restrict_create:
-    #                     create = 'false'
-    #                 if access_model.restrict_edit:
-    #                     edit = 'false'
-    #                 if access_model.restrict_delete:
-    #                     delete = 'false'
-
-    #             if view_type == 'form':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode')
-    #             if view_type == 'tree':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode')
-
-    #             if view_type == 'kanban':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode')
-
-    #         if access_recs:
-    #             delete = 'false'
-    #             edit = 'false'
-    #             create = 'false'
-    #             for access_rec in access_recs:
-    #                 if access_rec.create_right:
-    #                     create = 'true'
-    #                 if access_rec.write_right:
-    #                     edit = 'true'
-    #                 if access_rec.delete_right:
-    #                     delete = 'true'
-
-    #             if view_type == 'form':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode')
-    #             if view_type == 'tree':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode')
-
-    #             if view_type == 'kanban':
-    #                 doc = etree.XML(res['arch'])
-    #                 doc.attrib.update({'create':create, 'delete':delete,'edit':edit})
-
-    #                 res['arch'] = etree.tostring(doc, encoding='unicode').replace('&amp;quot;','&quot;')
-    #     return res
 
     def _get_access_management_domain_record(self, model=False):
         records = None
         try:
             if model:
-                self._cr.execute(SQL("SELECT id FROM ir_model WHERE model='%s'" % model))
-                model_numeric_id = self._cr.fetchone()[0]
+                self.env.cr.execute(SQL("SELECT id FROM ir_model WHERE model='%s'" % model))
+                model_numeric_id = self.env.cr.fetchone()[0]
                 if model_numeric_id and isinstance(model_numeric_id, int) and self.env.user:
-                    self._cr.execute(SQL("""
+                    query = SQL("""
                                     SELECT dm.id
                                     FROM access_domain_ah as dm
                                     WHERE dm.model_id=%s AND dm.access_management_id 
@@ -278,8 +200,9 @@ class BaseModel(models.AbstractModel):
                                         IN (SELECT amusr.access_management_id
                                             FROM access_management_users_rel_ah as amusr
                                             WHERE amusr.user_id=%s))
-                                    """% (model_numeric_id, self.env.user.id)))
-                    records = self.env['access.domain.ah'].sudo().browse(row[0] for row in self._cr.fetchall())
+                                    """% (model_numeric_id, self.env.user.id))
+                    self.env.cr.execute(query)
+                    records = self.env['access.domain.ah'].sudo().browse(row[0] for row in self.env.cr.fetchall())
         except:
             pass
         return records
@@ -301,38 +224,43 @@ class BaseModel(models.AbstractModel):
                 elif mode == 'write':
                     access = record.write_right
 
+                dom = safe_eval(record.domain) if record.domain else []
                 domain_list = []
                 if self.sudo()._name == "res.partner":
-                    domain_list += partner_domain
-                # eval_context = rec._eval_context()
-                dom = safe_eval(record.domain) if record.domain else []
+                    if dom:
+                        domain_list += partner_domain
+                    else:
+                        domain_list += [('id', 'in', partner_ids)]
+
                 if dom:
-                    dom = expression.normalize_domain(dom)
+                    dom = Domain(dom)  # Ensure `dom` is a Domain object
                     model_name = self._name
-                    if isinstance(dom, list):
+                    if isinstance(dom, list):  # ⚠️ this will now be False — optional clean-up
                         for dom_tuple in dom:
                             if isinstance(dom_tuple, tuple):
                                 compute_domain(dom_tuple, model_name)
-                                operator_value = dom_tuple[1]
-                               
-                                already_add = False
-                                if operator_value == 'date_filter':
-                                    domain_list += prepare_domain_v2(dom_tuple)
-                                else:
-                                    domain_list.append(dom_tuple)
+                                domain_list.append(dom_tuple)
+                                # operator_value = dom_tuple[1]
+                                # if operator_value == 'date_filter':
+                                #     domain_list += prepare_domain_v2(dom_tuple)
+                                # else:
+                                #     domain_list.append(dom_tuple)
                             else:
                                 domain_list.append(dom_tuple)
-                    # domain_list.append(dom)
+                    # else:
+                    #     domain_list += dom.args  # properly extract conditions from Domain object
+
                 search_domain = domain_list
                 if 'active' in self._fields:
-                    search_domain = ['|', ('active', '=', False), ('active', '=', True)] + search_domain
-                record_ids = self.search(search_domain)
+                    search_domain = search_domain + ['|', ('active', '=', False), ('active', '=', True)]
+                record_ids = self.search(search_domain)  # ✅ FIX HERE
 
                 if self in record_ids and access:
                     access_flag = access
                     break
             access_rule = record.access_management_id.name
         return {'access_flag': access_flag, 'access_rule': access_rule}
+
 
     def _display_access_management_error(self, mode=None, rule=None):
         if mode and rule:
@@ -358,7 +286,11 @@ class BaseModel(models.AbstractModel):
     def unlink(self):
         value = self.env['ir.config_parameter'].sudo().search([('key', '=', 'uninstall_simplify_access_management')],
                                                               limit=1).value
+        
         if not value:
+            readonly_rule = self.env['access.management'].sudo().search([('readonly','=',True),('user_ids','in',self.env.user.id)],limit=1)
+            if readonly_rule and not self._transient:
+                self._display_access_management_error(mode='unlink', rule=readonly_rule)
             for rec in self:
                 if rec._name:
                     access_domain_ah_ids = rec._get_access_management_domain_record(model=rec._name)
@@ -378,6 +310,9 @@ class BaseModel(models.AbstractModel):
         value = self.env['ir.config_parameter'].sudo().search([('key', '=', 'uninstall_simplify_access_management')],
                                                               limit=1).value
         if not value:
+            readonly_rule = self.env['access.management'].sudo().search([('readonly','=',True),('user_ids','in',self.env.user.id)],limit=1)
+            if readonly_rule and not self._transient:
+                self._display_access_management_error(mode='write', rule=readonly_rule)
             for rec in self:
                 if rec._name:
                     access_domain_ah_ids = rec._get_access_management_domain_record(model=rec._name)
@@ -391,27 +326,25 @@ class BaseModel(models.AbstractModel):
                         if not write_flag:
                             rec._display_access_management_error(mode='write', rule=access_rule)
         return super().write(vals)
+    
 
-    # @api.model_create_multi
+    @api.model_create_multi
     # @api.returns('self', lambda value: value.id)
-    # def create(self, vals_list):
-    #     value = self.env['ir.config_parameter'].sudo().search([('key','=','uninstall_simplify_access_management')],limit=1).value
-    #     if not value:
-    #         if self._name:
-    #             access_domain_ah_ids = self._get_access_management_domain_record(model=self._name)
-    #             if access_domain_ah_ids:
-    #                 access_domain_ah_ids = access_domain_ah_ids.filtered(lambda line: self.env.company in line.access_management_id.company_ids)
-    #             if access_domain_ah_ids:
-    #                     flag = self._check_access_management_right(mode='create',records=access_domain_ah_ids)
-    #                     create_flag = flag['access_flag']
-    #                     access_rule = flag['access_rule']
-    #                     if not create_flag:
-    #                         self._display_access_management_error(mode='create',rule=access_rule)
+    def create(self, vals_list):
+        value = self.env['ir.config_parameter'].sudo().search([('key','=','uninstall_simplify_access_management')],limit=1).value
+        if not value:
+            readonly_rule = self.env['access.management'].sudo().search([('readonly','=',True),('user_ids','in',self.env.user.id)],limit=1)
+            if readonly_rule and not self._transient:
+                self._display_access_management_error(mode='create', rule=readonly_rule)
+            if self._name:
+                access_domain_ah_ids = self._get_access_management_domain_record(model=self._name)
+                if access_domain_ah_ids:
+                    access_domain_ah_ids = access_domain_ah_ids.filtered(lambda line: self.env.company in line.access_management_id.company_ids)
+                if access_domain_ah_ids:
+                        flag = self._check_access_management_right(mode='create',records=access_domain_ah_ids)
+                        create_flag = flag['access_flag']
+                        access_rule = flag['access_rule']
+                        if not create_flag:
+                            self._display_access_management_error(mode='create',rule=access_rule)
 
-    #     return super().create(vals_list)
-    # @api.model
-    # def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-    #     if not self.env.context.get('is_access_rights'):
-    #         return super(BaseModel,self)._name_search(name, domain, operator, limit, order)
-    #     domain = expression.AND([domain,[('name', 'ilike', name)]])
-    #     return self._search(domain, limit=limit, order=order)
+        return super().create(vals_list)

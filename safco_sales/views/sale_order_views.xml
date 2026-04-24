@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_order_form_safco">
+            <field name="name">sale.order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/header/button[@id='action_confirm']" position="before">
+                    <button name="gm_action_confirm" type="object"
+                            class="btn-primary" string="GM Confirm" invisible="state != 'waiting'"
+                    />
+                </xpath>
+                <field name="payment_term_id" position="after">
+                    <field name="user_id"/>
+                    <field name="warehouse_id"/>
+                    <field name="client_order_ref"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

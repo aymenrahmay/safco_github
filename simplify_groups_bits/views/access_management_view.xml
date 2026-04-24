@@ -10,7 +10,7 @@
                     <!--expr="//group[@name='kpis']/group[last()]"-->
                     <field name="apply_by_group"/>
                     <field name="access_group_ids" widget='many2many_tags' options="{'no_create': True}"
-                           attrs="{'invisible':[('apply_by_group','=',False)]}"/>
+                           invisible="apply_by_group == False"/>
                 </xpath>
             </field>
         </record>

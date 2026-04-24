@@ -1,22 +1,10 @@
 # -*- coding: utf-8 -*-
-#################################################################################
-# Author      : Kanak Infosystems LLP. (<http://kanakinfosystems.com/>)
-# Copyright(c): 2012-Present Kanak Infosystems LLP.
-# All Rights Reserved.
-#
-#
-# This program is copyright property of the author mentioned above.
-# You can`t redistribute it and/or modify it.
-#
-#
-# You should have received a copy of the License along with this program.
-# If not, see <http://kanakinfosystems.com/license>
-#################################################################################
+# Powered by Kanak Infosystems LLP.
+# © 2020 Kanak Infosystems LLP. (<https://www.kanakinfosystems.com>).
 
 {
     'name': 'Electronic Invoice | Saudi VAT Invoice | Saudi E-Invoice | Saudi Electronic Invoice',
-    'version': '16.0.1.0',
-    'sequence': 1,
+    'version': '19.0.1.1',
     'category': 'Accounting',
     'summary': 'Saudi Electronic Invoice',
     'description': """
@@ -27,18 +15,12 @@
     'author': 'Kanak Infosystems LLP.',
     'website': 'https://www.kanakinfosystems.com',
     'license': 'OPL-1',
-    'depends': ['account','sale'],
+    'depends': ['account'],
     'data': [
         'report/vat_invoice_report_print.xml',
-        'report/vat_matrix_invoice_report_print.xml',
         'report/vat_report_action_call.xml',
-        'report/invoice_default_attach_in_mail.xml',
-
-        'report/sale_order_report/vat_sale_order_report_action_call.xml',
-        'report/sale_order_report/vat_sale_order_default_attach_in_mail.xml',
-        'report/sale_order_report/vat_sale_order_report_print.xml',
-
-        'views/account_move_report_action.xml',
+        'report/invoice_default_attach.xml',
+        'report/simpli_vat_invoice_report.xml',
         'views/res_company_view.xml',
     ],
     'assets': {
@@ -47,7 +29,5 @@
         ],
     },
     'images': ['static/description/banner.gif'],
-    'installable': True,
-    'auto_install': False,
-    'application': True,
+    'installable': True
 }

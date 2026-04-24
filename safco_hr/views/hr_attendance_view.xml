@@ -21,7 +21,7 @@
           <field name="name">safco_hr.hr.attendance.tree</field>
           <field name="model">hr.attendance</field>
           <field name="priority" eval="99"/>
-          <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+          <field name="inherit_id" ref="hr_attendance.view_attendance_tree_management"/>
           <field name="arch" type="xml">
             <xpath expr="//field[@name='check_out']" position="after">
               <field name="real_check_in" />

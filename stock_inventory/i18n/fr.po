@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-08-01 09:58+0000\n"
-"Last-Translator: \"Benjamin Willig (ACSONE)\" <benjamin.willig@acsone.eu>\n"
+"PO-Revision-Date: 2025-03-10 19:26+0000\n"
+"Last-Translator: Anonymous <noreply@weblate.org>\n"
 "Language-Team: none\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.6.2\n"
+"X-Generator: Weblate 5.10.2\n"
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__count_stock_quants
@@ -44,11 +44,16 @@ msgstr "Tous les articles"
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__responsible_id
 msgid "Assigned to"
-msgstr "Assigné à"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__message_attachment_count
 msgid "Attachment Count"
+msgstr ""
+
+#. module: stock_inventory
+#: model_terms:ir.ui.view,arch_db:stock_inventory.res_config_settings_view_form
+msgid "Auto Complete Inventory Adjustment"
 msgstr ""
 
 #. module: stock_inventory
@@ -64,33 +69,30 @@ msgstr "Commencer les ajustements"
 #. module: stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock_inventory.view_inventory_group_form
 msgid "Cancel"
-msgstr "Annuler"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields.selection,name:stock_inventory.selection__stock_inventory__state__cancel
 msgid "Cancelled"
-msgstr "Annulé"
+msgstr ""
 
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
 msgid ""
 "Cannot have more than one in-progress inventory adjustment affecting the "
 "same location or product at the same time."
 msgstr ""
-"Il n'est pas possible d'avoir plus d'un inventaire en cours qui affecte le "
-"même emplacement ou produit au même moment."
 
 #. module: stock_inventory
 #: model:ir.model,name:stock_inventory.model_res_company
 msgid "Companies"
-msgstr "Sociétés"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__company_id
 msgid "Company"
-msgstr "Société"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model,name:stock_inventory.model_res_config_settings
@@ -118,7 +120,11 @@ msgid "Date"
 msgstr "Date"
 
 #. module: stock_inventory
+#: model:ir.model.fields,field_description:stock_inventory.field_res_company__display_name
+#: model:ir.model.fields,field_description:stock_inventory.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__display_name
+#: model:ir.model.fields,field_description:stock_inventory.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:stock_inventory.field_stock_quant__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
 
@@ -135,7 +141,7 @@ msgstr "Brouillon"
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__exclude_sublocation
 msgid "Exclude Sublocation"
-msgstr "Exclure les sous locations"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__message_follower_ids
@@ -153,7 +159,11 @@ msgid "Has Message"
 msgstr ""
 
 #. module: stock_inventory
+#: model:ir.model.fields,field_description:stock_inventory.field_res_company__id
+#: model:ir.model.fields,field_description:stock_inventory.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__id
+#: model:ir.model.fields,field_description:stock_inventory.field_stock_move_line__id
+#: model:ir.model.fields,field_description:stock_inventory.field_stock_quant__id
 msgid "ID"
 msgstr "ID"
 
@@ -173,8 +183,6 @@ msgid ""
 "If enabled, it will only take into account the locations selected, and not "
 "their children."
 msgstr ""
-"Si activé, l'inventaire prendra en compte seul les emplacements "
-"sélectionnés, et pas leurs enfants."
 
 #. module: stock_inventory
 #: model:ir.model.fields,help:stock_inventory.field_res_company__stock_inventory_auto_complete
@@ -184,8 +192,6 @@ msgid ""
 "If enabled, when all the quants prepared for the adjustment are done, the "
 "adjustment is automatically set to done."
 msgstr ""
-"Si activé, lorsque tout les quants préparés pour l'ajustement sont finis, "
-"l'inventaire sera automatiquement marqué comme terminé."
 
 #. module: stock_inventory
 #: model:ir.model.fields.selection,name:stock_inventory.selection__stock_inventory__state__in_progress
@@ -225,11 +231,6 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: stock_inventory
-#: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__write_uid
 msgid "Last Updated by"
 msgstr "Dernière modification par"
@@ -256,11 +257,6 @@ msgid "Lot/Serial Numbers"
 msgstr "Lot/Numéros de série"
 
 #. module: stock_inventory
-#: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__message_main_attachment_id
-msgid "Main Attachment"
-msgstr ""
-
-#. module: stock_inventory
 #: model:ir.model.fields.selection,name:stock_inventory.selection__stock_inventory__product_selection__manual
 msgid "Manual Selection"
 msgstr "Sélection manuelle"
@@ -278,7 +274,6 @@ msgstr ""
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_quant.py:0
-#, python-format
 msgid "No move lines have been created"
 msgstr "Aucune ligne de mouvement de stock n'a été créée"
 
@@ -357,7 +352,7 @@ msgstr "Terminer"
 #. module: stock_inventory
 #: model:ir.model.fields,help:stock_inventory.field_stock_inventory__responsible_id
 msgid "Specific responsible of Inventory Adjustment."
-msgstr "Responsable spécifique de l'ajustement d'inventaire."
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_inventory__state
@@ -367,18 +362,18 @@ msgstr "Statut"
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_stock_quant__stock_inventory_ids
 msgid "Stock Inventories"
-msgstr "Inventaires de stock"
+msgstr ""
 
 #. module: stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock_inventory.res_config_settings_view_form
 msgid "Stock Inventory"
-msgstr "Inventaire de stock"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.model.fields,field_description:stock_inventory.field_res_company__stock_inventory_auto_complete
 #: model:ir.model.fields,field_description:stock_inventory.field_res_config_settings__stock_inventory_auto_complete
 msgid "Stock Inventory Auto Complete"
-msgstr "Fermeture automatique des inventaires"
+msgstr ""
 
 #. module: stock_inventory
 #: model:ir.actions.act_window,name:stock_inventory.action_view_stock_move_line_inventory_tree
@@ -393,24 +388,18 @@ msgstr "Lignes de mouvement de stock"
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
 msgid ""
 "There are active adjustments for the requested products: %(names)s. Blocking "
 "adjustments: %(blocking_names)s"
 msgstr ""
-"Il y a des ajustements actifs pour les produits demandées : %(names)s. "
-"Ajustements bloquants: %(blocking_names)s"
 
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
 msgid ""
-"There's already an Adjustment in Process using one requested Location: "
-"%(names)s. Blocking adjustments: %(blocking_names)s"
+"There's already an Adjustment in Process using one requested Location: %"
+"(names)s. Blocking adjustments: %(blocking_names)s"
 msgstr ""
-"Il y a déjà des ajustements en cours sur un des emplacements demandés: "
-"%(names)s. Ajustements bloquants: %(blocking_names)s"
 
 #. module: stock_inventory
 #: model:ir.model.fields,help:stock_inventory.field_stock_inventory__owner_id
@@ -436,7 +425,6 @@ msgstr ""
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
 msgid ""
 "When 'Product Selection: Lot Serial Number' is selected you are only able to "
 "add one product."
@@ -447,7 +435,6 @@ msgstr ""
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
 msgid ""
 "When 'Product Selection: One Product' is selected you are only able to add "
 "one product."
@@ -458,9 +445,14 @@ msgstr ""
 #. module: stock_inventory
 #. odoo-python
 #: code:addons/stock_inventory/models/stock_inventory.py:0
-#, python-format
+msgid "You can only delete inventory adjustments groups in draft state."
+msgstr ""
+
+#. module: stock_inventory
+#. odoo-python
+#: code:addons/stock_inventory/models/stock_inventory.py:0
 msgid "You can't cancel this inventory %(display_name)s."
-msgstr "Vous ne pouvez pas annuler cet inventaire %(display_name)s."
+msgstr ""
 
 #. module: stock_inventory
 #: model_terms:ir.ui.view,arch_db:stock_inventory.view_inventory_group_form
@@ -472,3 +464,6 @@ msgstr "par ex. Inventaire annuel"
 #~ "There's already an Adjustment in Process using one requested Location: %s"
 #~ msgstr ""
 #~ "Il y a déjà un ajustement en cours qui utilise l'emplacement demandé : %s"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"

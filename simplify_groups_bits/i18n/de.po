@@ -1,0 +1,92 @@
+# Translation of Odoo Server.
+
+# This file contains the translation of the following modules:
+# 	* simplify_groups_bits
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-03 05:51+0000\n"
+"PO-Revision-Date: 2025-12-05 16:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: German\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: simplify_groups_bits
+#: model:ir.actions.act_window,name:simplify_groups_bits.action_access_group
+#: model:ir.model,name:simplify_groups_bits.model_access_group
+#: model:ir.ui.menu,name:simplify_groups_bits.menu_access_group
+msgid "Access Group"
+msgstr "Zugriffsgruppe"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_management__access_group_ids
+msgid "Access Groups"
+msgstr "Zugriffsgruppen"
+
+#. module: simplify_groups_bits
+#: model:ir.model,name:simplify_groups_bits.model_access_management
+msgid "Access Management"
+msgstr "Zugriffsverwaltung"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__access_management_ids
+msgid "Access Management Rules"
+msgstr "Zugriffsverwaltungsregeln"
+
+
+#. module: simplify_groups_bits
+#: model:ir.ui.menu,name:simplify_groups_bits.menu_access_rule
+msgid "Access Rules"
+msgstr "Zugriffsregeln"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_management__apply_by_group
+msgid "Apply By Group"
+msgstr "Nach Gruppe anwenden"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__display_name
+msgid "Display Name"
+msgstr "Anzeigename"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__id
+msgid "ID"
+msgstr "ID"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__name
+#: model_terms:ir.ui.view,arch_db:simplify_groups_bits.access_group_form_view
+msgid "Name"
+msgstr "Name"
+
+#. module: simplify_groups_bits
+#: model:ir.model.fields,field_description:simplify_groups_bits.field_access_group__user_ids
+msgid "Users"
+msgstr "Benutzer"

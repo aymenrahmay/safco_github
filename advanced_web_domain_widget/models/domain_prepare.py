@@ -4,6 +4,7 @@ from datetime import datetime,timedelta
 from dateutil.relativedelta import relativedelta
 import pytz
 
+
 def compute_domain(domain_tuple,model):
     """
     This function takes a tuple of a domain and a model name as input. It parses
@@ -24,18 +25,19 @@ def compute_domain(domain_tuple,model):
     left_user = False
     left_company = False
     field_obj = request.env['ir.model.fields'].sudo()
+    model_obj = request.env[model]._name
     for field in left_value_split_list:
         left_user = False
         left_company = False
-        model_obj = request.env[model].sudo()
-        field = field_obj.search([('model_id.model','=',model_obj._name),('name','=',field)],limit=1)
-        field_type = field.ttype
+        model_field = field_obj.search([('model_id.model','=',model_obj),('name','=',field)],limit=1)
+        field_type = model_field.ttype
         if field_type in ['many2one', 'many2many', 'one2many']:
-            field_relation = field.relation
+            model_obj = model_field.relation
+            field_relation = model_field.relation
             relation_model = field_relation
             if relation_model == 'res.users':
                 left_user = True
-            if relation_model == 'res.company':
+            if relation_model == 'res.company': 
                 left_company = True
     
     if left_user:
@@ -50,7 +52,7 @@ def compute_domain(domain_tuple,model):
                 zero_index = right_value.index(0)
                 cids = request.httprequest.cookies.get('cids')
                 if cids:
-                    company_ids = [int(cid) for cid in cids.split(',') if cid]
+                    company_ids = [int(cid) for cid in cids.split('-') if cid]
                 else:
                     company_ids = [request.env.company.id]
                 right_value.pop(zero_index)
@@ -60,9 +62,7 @@ def compute_domain(domain_tuple,model):
                 right_value = request.env.company.id
 
     return (left_value, operator_value, right_value)
- 
-
-
+                
 def prepare_domain_v2(domain):
     if isinstance(domain, tuple) or isinstance(domain, list):
         field_name = domain[0]
@@ -570,7 +570,7 @@ def prepare_domain_v2(domain):
 #         else:
 #             prepared_domain.append(dom_tuple)
 #     return prepared_domain
-    
+
 
 
 

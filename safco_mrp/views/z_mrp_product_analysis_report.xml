@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <template id="z_mrp_product_analysis_report">
             <t t-call="web.html_container">
@@ -14,20 +14,20 @@
                                     <td rowspan="2" style="width:60%; height: 46px; valign=top;" >
                                         <center>
                                             <strong>
-                                                <span t-field="o.company_id.name"/> <br></br><br></br>Product Analysis Report
+                                                <span t-field="o.company_id.name"/> <br/><br/>Product Analysis Report
                                             </strong>
                                         </center>
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        DOC  NO:<br></br>
-                                        REV.NO:<br></br>
-                                        DATE:<br></br>
+                                        DOC  NO:<br/>
+                                        REV.NO:<br/>
+                                        DATE:<br/>
                                         PAGE:
                                     </td>
                                     <td style="width:15%;valign=top;">
-                                        FM QC 024<br></br>
-                                        0<br></br>
-                                        <span t-field="o.date_planned_start"  t-options='{"widget": "date"}'/><br></br>
+                                        FM QC 024<br/>
+                                        0<br/>
+                                        <span t-field="o.date_start"  t-options='{"widget": "date"}'/><br/>
                                         1 of 1
                                     </td>
                                 </tr>
@@ -47,7 +47,7 @@
                                 </tr>
                                 <tr>
                                     <td style="background-color:#DCDCDC;"><strong>Production Date</strong></td>
-                                    <td><span t-field="o.date_planned_start"/></td>
+                                    <td><span t-field="o.date_start"/></td>
                                 </tr>
                                 <tr>
                                     <td style="background-color:#DCDCDC;"><strong>Quantity (kg)</strong></td>
@@ -125,4 +125,4 @@
 
         </template>
     </data>
-</openerp>
+</odoo>

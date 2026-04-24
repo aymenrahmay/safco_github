@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################################################################
 # Author      : Terabits Technolab (<www.terabits.xyz>)
-# Copyright(c): 2021-23
+# Copyright(c): 2021-25
 # All Rights Reserved.
 #
 # This module is copyright property of the author mentioned above.
@@ -11,25 +11,27 @@
 
 {
     'name': 'Simplify Group Access',
-    'version': '16.0.2.0.0',
-    'summary': """ The Access Group feature simplifies access management by allowing you to create rules for specific groups of users """,
+    'version': '19.0.1.1.1',
+    'summary': """ The Access Group feature simplifies access management by allowing you to create rules for specific groups of users based on their assigned roles or job functions. This not only saves time over creating rules for individual users, but it also simplifies the process of managing access permissions for entire departments within the company. It provides a convenient way to efficiently apply access rules, ensuring that users have the appropriate permissions based on their roles and responsibilities. """,
     'sequence': 10,
     'author': 'Terabits Technolab',
     'license': 'OPL-1',
     'category': 'Services',
-    'website': 'https://www.terabits.xyz/apps/16.0/simplify_groups_bits',
+    'website': 'https://www.terabits.xyz/apps/19.0/simplify_groups_bits',
     'description': """
-        The Access Group feature simplifies access management by allowing you to create rules for specific groups of users
+        The Access Group feature simplifies access management by allowing you to create rules for specific groups of users based on their assigned roles or job functions. This not only saves time over creating rules for individual users, but it also simplifies the process of managing access permissions for entire departments within the company. It provides a convenient way to efficiently apply access rules, ensuring that users have the appropriate permissions based on their roles and responsibilities.
+
         """,
     'depends': ['simplify_access_management'],
     'data': [
         'security/ir.model.access.csv',
         'views/access_groups_view.xml',
         'views/access_management_view.xml',
+
     ],
     "price": "99.99",
     "currency": "USD",
-    'live_test_url': 'https://www.terabits.xyz/request_demo?source=index&version=16&app=simplify_access_management',
+    'live_test_url': 'https://www.terabits.xyz/request_demo?source=index&version=19&app=simplify_access_management',
     'images': ['static/description/banner.png'],
     'application': True,
     'installable': True,

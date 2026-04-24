@@ -8,9 +8,13 @@ class AccountPayment(models.Model):
 
     num_chk = fields.Char(string='Check Number')
     bank = fields.Many2one('res.bank', string='Bank name')
-    user_id = fields.Many2one('res.users', string='sales person',
-                                       related='partner_id.user_id', readonly=True,
-                                       help='related sales person to the contact', store= True )
+    user_id = fields.Many2one(
+        'res.users',
+        string='sales person',
+        related='partner_id.user_id',
+        readonly=True,
+        help='related sales person to the contact',
+    )
     account_manager = fields.Many2one('res.users', string='Account manager',readonly=True,
                                       help='Account manager')
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
@@ -39,21 +43,15 @@ class AccountPayment(models.Model):
                     approval_category.sequence_id.company_id = vals.get('company_id')
         return super().write(vals)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        if isinstance(vals_list, dict):
+            vals_list = [vals_list]
 
-    @api.model
-    def create(self, vals):
-        payment_id = super(AccountPayment, self).create(vals)
-        # payment_id.message_unsubscribe([self.env.user.partner_id.id])
-        if 'account_manager' not in vals or vals.get('account_manager') == False:
-            partner_id = vals.get('partner_id')
-            if partner_id:
-                account_manager_id = self.env['res.partner'].search([('id', '=', partner_id)]).user_id.id
-                payment_id.account_manager = account_manager_id
-        return payment_id
+        payments = super().create(vals_list)
 
-    def action_post(self):
-        if self.env.user.has_group('pw_user_restrict.group_no_create_partner'):
-            raise UserError(
-                _('You are not allowed to post account.payment due the group_no_create_partner restrection'))
-        else:
-            super(AccountPayment, self).action_post()
+        for payment, vals in zip(payments, vals_list):
+            if not vals.get('account_manager') and payment.partner_id and payment.partner_id.user_id:
+                payment.account_manager = payment.partner_id.user_id.id
+
+        return payments

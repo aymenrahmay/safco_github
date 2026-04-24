@@ -11,26 +11,15 @@
 
 {
     'name': 'Simplify Access Management',
-    'version': '16.0.17.14.20',
+    'version': '19.0.2.2.10',
     'sequence': 5,
     'author': 'Terabits Technolab',
     'license': 'OPL-1',
     'category': 'Services',
-    'website': 'https://www.terabits.xyz/apps/16.0/simplify_access_management',
-    'summary': """All In One Access Management App for setting the correct access rights for fields, models, menus, views for any module and for any user.
-        All in one access management App,
-        Easier then Record rules setup,
-        Centralize access rules,
-        User wise access rules,
-        
-        Multi Company supported.
+    'website': 'https://www.terabits.xyz/apps/18.0/simplify_access_management',
+    'summary': """All In One Access Management App for setting the correct access rights for fields, models, menus, views for a
         """,
-
-    'description': """
-        All In One Access Management App for setting the correct access rights for fields, models, menus, views for any module and for any user.
-    """,
-    "images": ["static/description/banner.gif"],
-    "price": "342.97",
+    "price": "392.97",
     "currency": "USD",
     'data': [
         'security/res_groups.xml',
@@ -41,19 +30,26 @@
         'views/store_model_nodes_view.xml',
     ],
     'assets': {
-        'web.assets_backend': [
-            '/simplify_access_management/static/src/js/action_menus.js',
-            '/simplify_access_management/static/src/js/hide_chatter.js',
-            '/simplify_access_management/static/src/js/hide_export.js',
-            '/simplify_access_management/static/src/js/custom_filter_item.js',
-            '/simplify_access_management/static/src/js/pivot_grp_menu.js',
-        ],
+    'web.assets_backend': [
+        'simplify_access_management/static/src/js/action_menus.js',
+        'simplify_access_management/static/src/js/hide_chatter.js',
+        'simplify_access_management/static/src/js/cog_menu.js',
+        'simplify_access_management/static/src/js/list_spreadsheet.js',
+        'simplify_access_management/static/src/js/form_controller.js',
+        'simplify_access_management/static/src/xml/mailChatter.xml',
+        'simplify_access_management/static/src/js/model_field_selector.js',
+        'simplify_access_management/static/src/js/search_bar_menu.js',
+        'simplify_access_management/static/src/js/custom_group_by_item.js',
+        'simplify_access_management/static/src/xml/custom_group_by_item.xml',
+        'simplify_access_management/static/src/js/remove_archive_with_rule.js',
 
-    },
-    'depends': ['web', 'advanced_web_domain_widget'],
-    'post_init_hook': 'post_install_action_dup_hook',
+    ],
+},
+
+    'depends': ['base','mail','web','advanced_web_domain_widget'],
+    #'post_init_hook': 'post_install_action_dup_hook',
     'application': True,
     'installable': True,
     'auto_install': False,
-    'live_test_url': 'https://www.terabits.xyz/request_demo?source=index&version=16&app=simplify_access_management',
+    'live_test_url': 'https://www.terabits.xyz/request_demo?source=index&version=19&app=simplify_access_management',
 }

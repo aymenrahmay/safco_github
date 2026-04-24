@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class StockQuant(models.Model):
@@ -18,8 +18,8 @@ class StockQuant(models.Model):
         store=True,
     )
 
-    def _apply_inventory(self):
-        res = super()._apply_inventory()
+    def _apply_inventory(self, date=None):
+        res = super()._apply_inventory(date)
         record_moves = self.env["stock.move.line"]
         adjustment = self.env["stock.inventory"].browse()
         for rec in self:
@@ -34,12 +34,12 @@ class StockQuant(models.Model):
                 ],
                 order="create_date asc",
             ).filtered(
-                lambda x: not x.company_id.id
+                lambda x, rec=rec: not x.company_id.id
                 or not rec.company_id.id
                 or rec.company_id.id == x.company_id.id
             )
             if len(moves) == 0:
-                raise ValueError(_("No move lines have been created"))
+                raise ValueError(self.env._("No move lines have been created"))
             move = moves[len(moves) - 1]
             adjustment.stock_move_ids |= move
             reference = move.reference

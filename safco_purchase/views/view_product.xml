@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="purchase_safco_view_product_template_only_form_view" model="ir.ui.view">
         <field name="name">purchase_safco.product.template.form</field>
         <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='categ_id']" position="after">
-                    <field name="income_analytic_account_id" groups="account.group_account_manager"/>
-                    <field name="expense_analytic_account_id" groups="account.group_account_manager"/>
+                <field name="income_analytic_account_id" groups="account.group_account_manager"/>
+                <field name="expense_analytic_account_id" groups="account.group_account_manager"/>
             </xpath>
         </field>
     </record>
@@ -16,11 +15,11 @@
     <record id="purchase_safco_view_product_category_form_view" model="ir.ui.view">
         <field name="name">purchase_safco.product.category.form</field>
         <field name="model">product.category</field>
-        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="inherit_id" ref="product.product_category_form_view"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='parent_id']" position="after">
-                    <field name="income_analytic_account_id" groups="account.group_account_manager"/>
-                    <field name="expense_analytic_account_id" groups="account.group_account_manager"/>
+                <field name="income_analytic_account_id" groups="account.group_account_manager"/>
+                <field name="expense_analytic_account_id" groups="account.group_account_manager"/>
             </xpath>
         </field>
     </record>

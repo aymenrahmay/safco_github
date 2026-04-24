@@ -7,5 +7,3 @@ access_hr_employee_relation,access_access_hr_employee_relation,model_hr_employee
 "access_hr_employee_insuranceuser","hr.employee.employee_insurance","model_hr_employee_insurance","hr.group_hr_user",1,0,0,0
 "access_hr_employee_insurance_typemanager","hr.employee.employee_insurance_type","model_hr_employee_insurance_type","hr.group_hr_manager",1,1,1,1
 "access_hr_employee_insurance_typeuser","hr.employee.employee_insurance_type","model_hr_employee_insurance_type","hr.group_hr_user",1,0,0,0
-"access_hr_employee_normalize_attendencesmanager","hr.employee.model_normalize_attendences","model_normalize_attendences","hr.group_hr_manager",1,1,1,1
-"access_hr_employee_normalize_attendences","hr.employee.model_normalize_attendences","model_normalize_attendences","hr.group_hr_user",1,0,0,0

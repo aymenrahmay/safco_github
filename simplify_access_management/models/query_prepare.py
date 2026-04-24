@@ -13,7 +13,6 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
                     params = (self.env.user.id, company_ids)
                     if from_model_table == 'access_management':
                         sql_condition = "am." + sql_condition
-                        
                         query = """SELECT am.id
                                 FROM access_management AS am
                                 WHERE am.active = TRUE
@@ -29,19 +28,18 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
                                     )
                                 )
                                 {operator} {sql_condition}""".format(operator=operator, sql_condition=sql_condition)
-                        self._cr.execute(query, params)
+                        self.env.cr.execute(query, params)
                         if limit > 0:
-                            row = self._cr.fetchone()
+                            row = self.env.cr.fetchone()
                             result = row[0] if row else False
                         else:
-                            result = [x[0] for x in self._cr.fetchall()]
+                            result = [x[0] for x in self.env.cr.fetchall()]
                         return self.env[from_model].sudo().browse(result)
                     else:
                         if search_model:
                             self.env[search_model].exists()
                             search_model_table = self.env[search_model]._table
                             sql_condition = "ft." + sql_condition
-                            
                             query = """SELECT ft.id
                                     FROM {from_model_table} AS ft
                                     WHERE EXISTS (
@@ -71,12 +69,12 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
                                     )
                                     )
                                     {operator} {sql_condition}""".format(from_model_table=from_model_table,operator=operator, sql_condition=sql_condition)
-                            self._cr.execute(query, (self.env.user.id, search_model, company_ids))
+                            self.env.cr.execute(query, (self.env.user.id, search_model, company_ids))
                             if limit > 0:
-                                row = self._cr.fetchone()
+                                row = self.env.cr.fetchone()
                                 result = row[0] if row else False
                             else:
-                                result = [x[0] for x in self._cr.fetchall()]
+                                result = [x[0] for x in self.env.cr.fetchall()]
                             return self.env[from_model].sudo().browse(result)   
 
             else:
@@ -87,6 +85,7 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
                         
                         self.env[search_model].exists()
                         params = (self.env.user.id,search_model, company_ids)
+                     
                         query = """SELECT ft.id
                                     FROM {from_model_table} AS ft
                                     WHERE EXISTS (
@@ -115,11 +114,11 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
                                             AND rel_comp.company_id = %s
                                     )
                                     )"""
-                        self._cr.execute(query.format(from_model_table=from_model_table), params)
+                        self.env.cr.execute(query.format(from_model_table=from_model_table), params)
                         if limit > 0:
-                            result = self._cr.fetchone()[0]
+                            result = self.env.cr.fetchone()[0]
                         else:
-                            result = [x[0] for x in self._cr.fetchall()]
+                            result = [x[0] for x in self.env.cr.fetchall()]
                         if result:
                             return self.env[from_model].sudo().browse(result)
                         else:
@@ -128,4 +127,3 @@ def search_data(self, from_model, search_model=False, condition=False, operator=
             return False
     except Exception as e:
         raise e
-            

@@ -1,2 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_payment_invoice_line,access_payment_invoice_line,model_payment_invoice_line,,1,1,1,1
+access_payment_invoice_line_account_invoice,payment.invoice.line.account.invoice,model_payment_invoice_line,account.group_account_invoice,1,0,0,0
+access_payment_invoice_line_account_user,payment.invoice.line.account.user,model_payment_invoice_line,account.group_account_user,1,1,1,1
+access_payment_invoice_line_account_manager,payment.invoice.line.account.manager,model_payment_invoice_line,account.group_account_manager,1,1,1,1

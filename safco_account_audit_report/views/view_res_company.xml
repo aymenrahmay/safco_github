@@ -6,12 +6,8 @@
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook" position="inside">
-                <div class="page" string="Auditing partner">
-                    <group>
+            <xpath expr="//field[@name='currency_id']" position="after">
                         <field name="safco_auditing_partner_id"/>
-                    </group>
-                </div>
             </xpath>
         </field>
     </record>

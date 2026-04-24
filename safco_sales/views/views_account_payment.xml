@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_account_payment_form_safco">
+            <field name="name">account.payment</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="user_id" invisible="1"/>
+                    <field name="account_manager"/>
+                </field>
+                <field name="date" position="after"><!-- le champ payment_date à eté changé en date-->
+                    <field name="bank"/>
+                    <field name="num_chk"/>
+                    <field name="move_name"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_account_payment_tree_safco">
+            <field name="name">account.payment</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="user_id" invisible="1"/>
+                    <field name="account_manager"/>
+                    <field name="move_name"/>
+                    <field name="memo"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

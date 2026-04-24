@@ -3,7 +3,6 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import fields, models
-from datetime import timedelta
 
 
 class ResPartner(models.Model):
@@ -26,7 +25,10 @@ class ResPartner(models.Model):
     def _compute_overdue_invoice_count_amount(self):
         for partner in self:
             company_id = partner.company_id.id or partner.env.company.id
-            (count,amount_company_currency,) = partner._prepare_overdue_invoice_count_amount(company_id)
+            (
+                count,
+                amount_company_currency,
+            ) = partner._prepare_overdue_invoice_count_amount(company_id)
             partner.overdue_invoice_count = count
             partner.overdue_invoice_amount = amount_company_currency
 
@@ -36,30 +38,27 @@ class ResPartner(models.Model):
         self.ensure_one()
         domain = self._prepare_overdue_invoice_domain(company_id)
         # amount_residual_signed is in company currency
-        rg_res = self.env["account.move"].read_group(
-            domain, ["amount_residual_signed"], []
+        rg_res = self.env["account.move"]._read_group(
+            domain, groupby=[], aggregates=["__count", "amount_residual_signed:sum"]
         )
         count = 0
         overdue_invoice_amount = 0.0
         if rg_res:
-            count = rg_res[0]["__count"]
-            overdue_invoice_amount = rg_res[0]["amount_residual_signed"]
+            count = rg_res[0][0]
+            overdue_invoice_amount = rg_res[0][1]
         return (count, overdue_invoice_amount)
 
     def _prepare_overdue_invoice_domain(self, company_id):
-
         # The use of commercial_partner_id is in this method
         self.ensure_one()
         today = fields.Date.context_today(self)
         if company_id is None:
             company_id = self.env.company.id
-        due_before_x_days = self.env['ir.config_parameter'].sudo().get_param('due_before_x_days')
         domain = [
             ("move_type", "=", "out_invoice"),
             ("company_id", "=", company_id),
             ("commercial_partner_id", "=", self.commercial_partner_id.id),
             ("invoice_date_due", "<", today),
-            ("invoice_date", "<", today - timedelta(days= int(due_before_x_days) or 90)),
             ("state", "=", "posted"),
             ("payment_state", "in", ("not_paid", "partial")),
         ]
@@ -71,8 +70,6 @@ class ResPartner(models.Model):
         )
         action["domain"] = self._prepare_overdue_invoice_domain(company_id)
         action["context"] = {
-            "journal_type": "sale",
-            "move_type": "out_invoice",
             "default_move_type": "out_invoice",
             "default_partner_id": self.id,
         }
