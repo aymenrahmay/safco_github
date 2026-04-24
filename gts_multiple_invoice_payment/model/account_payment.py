@@ -22,7 +22,6 @@ class PaymentInvoiceLine(models.Model):
                           help="Enter amount to pay for this invoice, supports partial payment")
     invoice_date = fields.Date('Invoice Date')
     payment_state = fields.Selection(
-        selection=lambda self: self.env["account.move"]._fields["payment_state"].selection,
         string="Payment Status", related='invoice_id.payment_state',
         store=True)
     select = fields.Boolean('Select', help="Click to select the invoice")
@@ -60,7 +59,7 @@ class AccountPayment(models.Model):
 
     invoice_total = fields.Float('Invoice Total',
                                  help="Shows total invoice amount selected for this payment")
-    invoice_lines = fields.One2many('payment.invoice.line', 'payment_id', 'Invoices',
+    invoice_lines = fields.One2many('payment.invoice.line', 'payment_id', 'Selected Invoices',
                                     help='Please select invoices for this partner for the payment')
     selected_inv_total = fields.Float(compute='compute_selected_invoice_total',
                                       store=True, string='Assigned Amount')

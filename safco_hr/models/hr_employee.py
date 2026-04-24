@@ -42,7 +42,7 @@ class HrEmployeeDependentsInfo(models.Model):
     relation_id = fields.Many2one('hr.employee.relation', string="Relation", help="Relationship with the employee")
     member_name = fields.Char(string='Name')
     member_contact = fields.Char(string='Contact No')
-    birth_date = fields.Date(string="Birth date", tracking=True)
+    birth_date = fields.Date(string="Birth date")
     dependent_iqama_id = fields.Integer(string="National/Iqama ID")
     dependent_expiry_date = fields.Date(string='Expiry Date', help='Expiry date of Identification ID')
 
@@ -66,6 +66,6 @@ class EmployeeInsurance(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", help='Select corresponding Employee',
                                   invisible=1)
-    start_date = fields.Date(string="Start date", tracking=True)
-    end_date = fields.Date(string="End date", tracking=True)
+    start_date = fields.Date(string="Start date")
+    end_date = fields.Date(string="End date")
     insurance_type_id = fields.Many2one('hr.employee.insurance.type', string="Insurance type")

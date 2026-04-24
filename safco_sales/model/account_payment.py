@@ -8,9 +8,13 @@ class AccountPayment(models.Model):
 
     num_chk = fields.Char(string='Check Number')
     bank = fields.Many2one('res.bank', string='Bank name')
-    user_id = fields.Many2one('res.users', string='sales person',
-                                       related='partner_id.user_id', readonly=True,
-                                       help='related sales person to the contact', store= True )
+    user_id = fields.Many2one(
+        'res.users',
+        string='sales person',
+        related='partner_id.user_id',
+        readonly=True,
+        help='related sales person to the contact',
+    )
     account_manager = fields.Many2one('res.users', string='Account manager',readonly=True,
                                       help='Account manager')
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
