@@ -12,7 +12,7 @@
             'wizard/audit_report_wizard.xml',
 
             #'report/report.xml',
-            'report/audit_report_print.xml',
+            #'report/audit_report_print.xml',
 
             'security/ir.model.access.csv',
             ],
