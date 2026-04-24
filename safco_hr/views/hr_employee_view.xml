@@ -4,6 +4,7 @@
        <record model="ir.ui.view" id="safc_view_tree_hr_employee">
             <field name="name">safco_hr_inherited.hr.employee.tree</field>
             <field name="model">hr.employee</field>
+            <field name="type">list</field>
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='work_email']" position="replace"/>

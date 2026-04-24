@@ -11,6 +11,23 @@ class AccountMove(models.Model):
 
     invoice_date_supply = fields.Datetime('Date Of Supply')
 
+    def _get_shipments_reference(self):
+        self.ensure_one()
+        refs = []
+
+        # Odoo versions/custom stacks expose delivery links differently.
+        if 'picking_ids' in self._fields:
+            refs.extend(self.picking_ids.filtered(lambda p: p.name).mapped('name'))
+
+        if 'stock_move_id' in self._fields and self.stock_move_id.picking_id:
+            refs.append(self.stock_move_id.picking_id.name)
+
+        if 'invoice_origin' in self._fields and self.invoice_origin:
+            refs.append(self.invoice_origin)
+
+        # Preserve order while removing duplicates and falsy values.
+        return ', '.join(dict.fromkeys(ref for ref in refs if ref))
+
     def get_product_arabic_name(self, pid):
         IrTranslation = self.env['ir.translation']
         domain = [
