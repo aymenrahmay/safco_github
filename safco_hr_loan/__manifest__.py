@@ -6,6 +6,7 @@
     'description': 'Helps you manage loan requests and deductions for your company staff.',
     'category': 'Human Resources/Payroll',
     'author': 'Aymen RAHMANI',
+    "license": "OPL-1",
     'maintainer': 'Aymen RAHMANI',
 
     'depends': ['base', 'hr_payroll', 'hr', 'account', 'l10n_sa_hr_payroll'],

@@ -7,7 +7,7 @@
     'description': "Adding saudi market required extra fields in employee profile and payroll flows.",
     'author': 'Aymen RAHMANI',
     'maintainer': 'Aymen RAHMANI',
-    'license': 'AGPL-3',
+    "license": "OPL-1",
     'depends': ['base', 'hr', 'hr_payroll', 'mail', 'hr_holidays', 'hr_attendance'],
     'data': [
         'security/ir.model.access.csv',
