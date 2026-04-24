@@ -28,7 +28,7 @@ class InventoryAdjustmentsGroup(models.Model):
         readonly=True,
         index=True,
         default=lambda self: self.env.company,
-        required=True,
+
     )
 
     state = fields.Selection(
