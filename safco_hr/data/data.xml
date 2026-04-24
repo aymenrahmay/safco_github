@@ -42,5 +42,80 @@
             <field name="name">Normal Structure (No GOSI)-o</field>
     </record>
 
+    <!-- Legacy salary rules kept to preserve existing payslip line references -->
+    <record id="safco_hr_hr_salary_rule_BASICbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">BASIC</field>
+            <field name="category_id" ref="hr_payroll.BASIC"/>
+            <field name="name">BASIC</field>
+            <field name="sequence" eval="90"/>
+            <field name="amount_python_compute">result = (contract.wage)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+    <record id="safco_hr_hr_salary_rule_GROSSbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">GROSS</field>
+            <field name="category_id" ref="hr_payroll.GROSS"/>
+            <field name="name">GROSS</field>
+            <field name="sequence" eval="998"/>
+            <field name="amount_python_compute">result = (categories.BASIC + categories.ALW)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+    <record id="safco_hr_hr_salary_rule_NETbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">NET</field>
+            <field name="category_id" ref="hr_payroll.NET"/>
+            <field name="name">NET</field>
+            <field name="sequence" eval="999"/>
+            <field name="amount_python_compute">result = (categories.BASIC + categories.ALW + categories.DED)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+    <record id="safco_hr_hr_salary_rule_HAbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">H_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Housing allowance</field>
+            <field name="sequence" eval="99"/>
+            <field name="amount_python_compute">result = (contract.housing_allowance)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+     <record id="safco_hr_hr_salary_rule_PHbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">P_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Phone allowance</field>
+            <field name="sequence" eval="99"/>
+            <field name="amount_python_compute">result = (contract.phone_allowance)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+     <record id="safco_hr_hr_salary_rule_TRbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">T_ALLOWANCE</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="name">Transportation allowance</field>
+            <field name="sequence" eval="99"/>
+            <field name="amount_python_compute">result = (contract.transportation_allowance)</field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+    <record id="safco_hr_hr_salary_rule_ATTENDDANCES_DELAYbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">ATT_DELAYS</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Attendances delays</field>
+            <field name="sequence" eval="996"/>
+            <field name="amount_python_compute">x = worked_days.WORK100.number_of_hours - (payslip.attendance_count*contract.resource_calendar_id.hours_per_day)  if contract.work_entry_source=='attendance' else 0
+result = (x /contract.resource_calendar_id.hours_per_day)* (contract.wage/30)  if contract.work_entry_source=='attendance' else 0
+ </field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
+    <record id="safco_hr_hr_salary_rule_UNPAIDbfns" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">UNPAID</field>
+            <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="name">Unpaid Leave</field>
+            <field name="sequence" eval="995"/>
+            <field name="amount_python_compute">result = - (payslip.requested_working_day - payslip.attendance_count)*(contract.wage/30)   if contract.work_entry_source=='attendance' else 0 </field>
+            <field name="struct_id" ref="hr_payroll.hr_rule_basic"/>
+         </record>
 
 </odoo>
