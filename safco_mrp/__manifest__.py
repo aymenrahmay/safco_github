@@ -6,7 +6,7 @@
     'summary': 'Custom SAFCO manufacturing reports and fields',
     'description': 'Custom SAFCO MRP fields, views and PDF reports.',
     'author': 'Aymen RAHMANI',
-    'license': 'LGPL-3',
+    "license": "OPL-1",
     'depends': ['base', 'sale', 'mrp', 'mrp_account_enterprise'],
     'data': [
         'views/views_model.xml',

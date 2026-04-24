@@ -5,6 +5,7 @@
     'category': 'Sale ',
     'description': "Sale safco ",
     'author': "Aymen RAHMANI",
+    "license": "OPL-1",
     'depends': ['base','sale','account','purchase','sale_stock'],
     'data': [
             'views/views_account_payment.xml',

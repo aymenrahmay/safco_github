@@ -1,5 +1,5 @@
 {
-    "name": "Stock Inventory Adjustment",
+    "name": "Stock Inventory Adjustment delete from ir_ui_view where id = 4403;  ",
     "version": "19.0.1.0.0",
     "license": "LGPL-3",
     "maintainer": ["DavidJForgeFlow"],
@@ -20,3 +20,5 @@
     "installable": True,
     "application": False,
 }
+
+

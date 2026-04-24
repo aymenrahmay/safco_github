@@ -6,6 +6,7 @@
     'description': "Safco accounting audit report ",
     'author': "Aymen RAHMANI",
     'depends': ['account'],
+    "license": "OPL-1",
     'data': [
             'views/view_res_partner.xml',
             'views/view_res_company.xml',
