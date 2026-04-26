@@ -42,6 +42,7 @@ class HrAttendance(models.Model):
         attendance_list = []
         for base_url in base_urls:
             attendance_data = self.get_data_from_devices(specific_date, base_url)
+
             if attendance_data:
                 attendance_list.extend(attendance_data)
         if attendance_list:
@@ -68,10 +69,23 @@ class HrAttendance(models.Model):
                 if last_punch_time:
                     authorized_check_out = shall_work_to - timedelta(minutes=15)
                     check_out = shall_work_to if last_punch_time > authorized_check_out else shall_work_to + timedelta(hours=-1)
+                check_in_utc = check_in - timedelta(hours=3) if check_in else False
+                check_out_utc = check_out - timedelta(hours=3) if check_out else False
+                if not check_in_utc or not check_out_utc or check_out_utc <= check_in_utc:
+                    _logger.warning(
+                        "Skipping invalid attendance for employee %s (%s): check_in=%s check_out=%s shift_from=%s shift_to=%s",
+                        employee_id.name,
+                        emp_code,
+                        check_in_utc,
+                        check_out_utc,
+                        shall_work_from,
+                        shall_work_to,
+                    )
+                    continue
                 self.env['hr.attendance'].create({
                     'employee_id': employee_id.id,
-                    'check_in': check_in - timedelta(hours=3) if check_in else check_in,
-                    'check_out': check_out - timedelta(hours=3) if check_out else check_out,
+                    'check_in': check_in_utc,
+                    'check_out': check_out_utc,
                     'real_check_in': first_punch_time - timedelta(hours=3) if first_punch_time else first_punch_time,
                     'real_check_out': last_punch_time - timedelta(hours=3) if last_punch_time else last_punch_time,
                 })
@@ -110,8 +124,14 @@ class HrAttendance(models.Model):
         attendance = self.env['resource.calendar.attendance'].search([('dayofweek', '=', str(day_num)), ('calendar_id', '=', resource_calendar_id.id)], limit=1)
         if not attendance:
             return False, False
-        shall_work_from = first_punch_time.replace(hour=int(attendance.hour_from), minute=0, second=0)
-        shall_work_to = first_punch_time.replace(hour=int(attendance.hour_to), minute=0, second=0)
+        hour_from = int(attendance.hour_from)
+        minute_from = int(round((attendance.hour_from - hour_from) * 60))
+        hour_to = int(attendance.hour_to)
+        minute_to = int(round((attendance.hour_to - hour_to) * 60))
+        shall_work_from = first_punch_time.replace(hour=hour_from, minute=minute_from, second=0, microsecond=0)
+        shall_work_to = first_punch_time.replace(hour=hour_to, minute=minute_to, second=0, microsecond=0)
+        if shall_work_to <= shall_work_from:
+            shall_work_to += timedelta(days=1)
         return shall_work_from, shall_work_to
 
     def get_employee_resource_calendar_by_emp_code(self, emp_code):
