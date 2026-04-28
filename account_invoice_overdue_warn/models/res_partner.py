@@ -2,7 +2,11 @@
 # @author: Alexis de Lattre <alexis.delattre@akretion.com>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import timedelta
+
 from odoo import fields, models
+
+OVERDUE_INVOICE_DAYS_PARAM = "account_invoice_overdue_warn.overdue_invoice_days"
 
 
 class ResPartner(models.Model):
@@ -52,13 +56,19 @@ class ResPartner(models.Model):
         # The use of commercial_partner_id is in this method
         self.ensure_one()
         today = fields.Date.context_today(self)
+        overdue_days = int(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(OVERDUE_INVOICE_DAYS_PARAM, 90)
+        )
+        overdue_date_limit = today - timedelta(days=overdue_days)
         if company_id is None:
             company_id = self.env.company.id
         domain = [
             ("move_type", "=", "out_invoice"),
             ("company_id", "=", company_id),
             ("commercial_partner_id", "=", self.commercial_partner_id.id),
-            ("invoice_date_due", "<", today),
+            ("invoice_date_due", "<", overdue_date_limit),
             ("state", "=", "posted"),
             ("payment_state", "in", ("not_paid", "partial")),
         ]

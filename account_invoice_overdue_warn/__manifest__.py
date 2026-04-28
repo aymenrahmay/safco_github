@@ -13,6 +13,7 @@
     "website": "https://github.com/OCA/credit-control",
     "depends": ["account"],
     "data": [
+        "data/ir_config_parameter.xml",
         "views/res_partner.xml",
     ],
     "installable": True,

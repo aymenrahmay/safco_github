@@ -45,8 +45,8 @@ class TestOverdueWarn(TransactionCase):
                 "move_type": "out_invoice",
                 "company_id": cls.company.id,
                 "currency_id": cls.company.currency_id.id,
-                "invoice_date": today - timedelta(days=5),
-                "invoice_date_due": today - timedelta(days=5),
+                "invoice_date": today - timedelta(days=100),
+                "invoice_date_due": today - timedelta(days=100),
                 "invoice_line_ids": [
                     Command.create(
                         {
@@ -62,6 +62,29 @@ class TestOverdueWarn(TransactionCase):
             }
         )
         cls.out_invoice1.action_post()
+        cls.out_invoice_recent = cls.env["account.move"].create(
+            {
+                "partner_id": cls.bad_payer.id,
+                "move_type": "out_invoice",
+                "company_id": cls.company.id,
+                "currency_id": cls.company.currency_id.id,
+                "invoice_date": today - timedelta(days=5),
+                "invoice_date_due": today - timedelta(days=5),
+                "invoice_line_ids": [
+                    Command.create(
+                        {
+                            "name": "test line",
+                            "display_type": "product",
+                            "price_unit": 250,
+                            "quantity": 1,
+                            "account_id": acc.id,
+                            "tax_ids": [],
+                        }
+                    )
+                ],
+            }
+        )
+        cls.out_invoice_recent.action_post()
         cls.out_invoice2 = cls.env["account.move"].create(
             {
                 "partner_id": cls.bad_payer.id,
