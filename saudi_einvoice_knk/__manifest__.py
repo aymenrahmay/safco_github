@@ -5,7 +5,7 @@
 {
     'name': 'Electronic Invoice | Saudi VAT Invoice | Saudi E-Invoice | Saudi Electronic Invoice',
     'version': '19.0.1.1',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'summary': 'Saudi Electronic Invoice',
     'description': """
      Electronic Invoice- Invoice | Saudi Electronic Invoice
