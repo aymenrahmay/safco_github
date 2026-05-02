@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_saleorder_document_safco" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//th[@name='th_subtotal']" position="after">
+            <th name="th_total_incl_tax" class="text-end">
+                <span>Total Incl. Tax</span>
+            </th>
+        </xpath>
+
+        <xpath expr="//tr[@name='tr_section']/td[@name='td_section_price']" position="after">
+            <td t-if="show_section_total" name="td_section_total_incl_tax" class="text-end o_price_total">
+                <span
+                    name="price_total_section"
+                    t-out="line._get_section_totals('price_total')"
+                    class="text-nowrap"
+                    t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                >
+                    27.00
+                </span>
+            </td>
+        </xpath>
+
+        <xpath expr="//tr[@name='tr_combo']/td[@name='td_combo_price']" position="after">
+            <td name="td_combo_total_incl_tax" class="text-end o_price_total">
+                <span
+                    t-if="not collapse_prices"
+                    name="price_total_combo"
+                    t-out="line._get_combo_totals('price_total')"
+                    class="text-nowrap"
+                    t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                >
+                    27.00
+                </span>
+            </td>
+        </xpath>
+
         <xpath expr="//tr[@name='tr_product']/td[@name='td_product_name']/span" position="replace">
             <t t-set="product_name" t-value="line.product_id.display_name if line.product_id else False"/>
             <t t-set="description_parts" t-value="line.name.split('\n', 1) if line.name else []"/>
@@ -14,6 +47,28 @@
                 <span t-if="extra_description" t-esc="extra_description"/>
             </t>
             <span t-else="" t-field="line.name">Bacon Burger</span>
+        </xpath>
+
+        <xpath expr="//tr[@name='tr_product']/td[@name='td_product_subtotal']" position="after">
+            <td name="td_product_total_incl_tax" class="text-end o_price_total">
+                <t t-if="not line.is_downpayment and not collapse_prices">
+                    <span t-field="line.price_total">
+                        27.00
+                    </span>
+                </t>
+            </td>
+        </xpath>
+
+        <xpath expr="//tr[@name='tr_section_group']/td[@name='td_section_group_total']" position="after">
+            <td name="td_section_group_total_incl_tax" class="text-end o_price_total">
+                <span
+                    t-if="show_section_total"
+                    t-out="section_line['price_total']"
+                    t-options="{'widget': 'monetary', 'display_currency': doc.currency_id}"
+                >
+                    30.00
+                </span>
+            </td>
         </xpath>
     </template>
 </odoo>
