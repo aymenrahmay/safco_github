@@ -169,60 +169,10 @@ class AccountPayment(models.Model):
         return res
 
     def _prepare_move_lines_per_type(self, write_off_line_vals=None, force_balance=None):
-        line_vals_per_type = super()._prepare_move_lines_per_type(
+        return super()._prepare_move_lines_per_type(
             write_off_line_vals=write_off_line_vals,
             force_balance=force_balance,
         )
-        invoice_lines = self.invoice_lines.filtered(lambda line: line.amount > 0 and line.invoice_id)
-        if not invoice_lines:
-            return line_vals_per_type
-
-        counterpart_lines = line_vals_per_type.get('counterpart_lines') or []
-        if len(counterpart_lines) != 1:
-            return line_vals_per_type
-
-        counterpart_line = counterpart_lines[0]
-        total_amount_currency = counterpart_line['amount_currency']
-        total_balance = counterpart_line['balance']
-        sign = -1 if total_amount_currency < 0 else 1
-        split_lines = []
-
-        allocated_amount_currency = 0.0
-        allocated_balance = 0.0
-        for invoice_line in invoice_lines:
-            amount_currency = sign * abs(invoice_line.amount)
-            balance = self.currency_id._convert(
-                amount_currency,
-                self.company_id.currency_id,
-                self.company_id,
-                self.date,
-            )
-            allocated_amount_currency += amount_currency
-            allocated_balance += balance
-
-            vals = dict(counterpart_line)
-            vals.update({
-                'amount_currency': amount_currency,
-                'balance': balance,
-            })
-            split_lines.append(vals)
-
-        remaining_amount_currency = total_amount_currency - allocated_amount_currency
-        remaining_balance = total_balance - allocated_balance
-        if (
-            not self.currency_id.is_zero(remaining_amount_currency)
-            or not self.company_id.currency_id.is_zero(remaining_balance)
-        ):
-            vals = dict(counterpart_line)
-            vals.update({
-                'amount_currency': remaining_amount_currency,
-                'balance': remaining_balance,
-            })
-
-            split_lines.append(vals)
-
-        line_vals_per_type['counterpart_lines'] = split_lines
-        return line_vals_per_type
 
     def _reconcile_selected_invoice_lines(self):
         PartialReconcile = self.env['account.partial.reconcile']
@@ -301,24 +251,9 @@ class AccountPayment(models.Model):
             return self.env['account.move.line']
 
         _liquidity_lines, counterpart_lines, _writeoff_lines = self._seek_for_lines()
-        candidates = counterpart_lines.filtered(lambda line: not line.reconciled)
-        if not candidates:
-            return candidates
-
-        same_account_candidates = candidates.filtered(lambda line: line.account_id == invoice_line.account_id)
-        if same_account_candidates:
-            candidates = same_account_candidates
-
-        expected_amount = self.currency_id._convert(
-            abs(invoice_payment_line.amount),
-            self.company_id.currency_id,
-            self.company_id,
-            self.date,
-        )
-        for line in candidates:
-            if self.company_id.currency_id.compare_amounts(abs(line.balance), expected_amount) == 0:
-                return line
-        return candidates[:1]
+        return counterpart_lines.filtered(
+            lambda line: not line.reconciled and line.account_id == invoice_line.account_id
+        )[:1]
 
     def copy(self, default=None):
         default = dict(default or {})

@@ -62,7 +62,7 @@ class SaleOrder(models.Model):
         return True
 
     def gm_action_confirm(self):
-        if not self.env.user.user_has_groups('sales_team.group_sale_manager'):
+        if not self.env.user.has_group('sales_team.group_sale_manager'):
             raise UserError(_('Only a Sales Manager can confirm quotations.'))
 
         invalid_orders = self.filtered(lambda order: order.state != 'waiting_gm')
@@ -81,7 +81,7 @@ class SaleOrder(models.Model):
         return result
 
     def action_confirm(self):
-        if self.env.user.user_has_groups('sales_team.group_sale_manager'):
+        if self.env.user.has_group('sales_team.group_sale_manager'):
             return super().action_confirm()
         raise UserError(_('Use "Send for GM Approval". Only the GM can confirm quotations.'))
 
