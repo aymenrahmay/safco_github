@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
@@ -19,74 +20,77 @@ class SaleOrderLine(models.Model):
                     'order_id': res.order_id.id,
                     'product_id': accessory_product_id.id,
                     'name': '***',
-                    'price_unit':0,
+                    'price_unit': 0,
                     'product_uom_qty': res.product_uom_qty,
-                    'product_uom':accessory_product_id.uom_id.id
+                    'product_uom': accessory_product_id.uom_id.id,
                 })
         return res
+
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    sale_order_cost = fields.Float('Order cost', readonly=True, compute='_get_order_cost')
-    approval_required = fields.Html("Approval Required", readonly=True, copy= False)
-    need_gm_approval= fields.Boolean('Waiting for GM approval')
+    sale_order_cost = fields.Float('Order cost', readonly=True, compute='_compute_sale_order_cost')
+    state = fields.Selection(
+        selection_add=[('waiting_gm', 'Waiting GM Approval')],
+        ondelete={'waiting_gm': 'set default'},
+    )
+    gm_approved_by = fields.Many2one('res.users', string='GM Approved By', readonly=True, copy=False)
+    gm_approved_on = fields.Datetime(string='GM Approved On', readonly=True, copy=False)
 
-    state = fields.Selection([
-        ('draft', 'Quotation'),
-        ('waiting', 'waiting GM approval'),
-        ('sent', 'Quotation Sent'),
-        ('sale', 'Sales Order'),
-        ('done', 'Locked'),
-        ('cancel', 'Cancelled'),
-    ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', track_sequence=3,
-        default='draft')
+    @api.depends('order_line.product_uom_qty', 'order_line.product_id.standard_price')
+    def _compute_sale_order_cost(self):
+        for order in self:
+            order.sale_order_cost = sum(
+                line.product_uom_qty * line.product_id.standard_price
+                for line in order.order_line
+            )
 
+    def action_request_gm_approval(self):
+        invalid_orders = self.filtered(lambda order: order.state not in ('draft', 'sent'))
+        if invalid_orders:
+            raise UserError(_('Only draft or sent quotations can be sent for GM approval.'))
 
+        self.write({
+            'state': 'waiting_gm',
+            'gm_approved_by': False,
+            'gm_approved_on': False,
+        })
+
+        for order in self:
+            order.message_post(body=_('Sent for GM approval by %s') % self.env.user.partner_id.name)
+        return True
 
     def gm_action_confirm(self):
-        orders_to_approve = self.filtered(lambda order: order.state in ('draft', 'sent', 'waiting'))
-        invalid_orders = self - orders_to_approve
+        if not self.env.user.user_has_groups('sales_team.group_sale_manager'):
+            raise UserError(_('Only a Sales Manager can confirm quotations.'))
+
+        invalid_orders = self.filtered(lambda order: order.state != 'waiting_gm')
         if invalid_orders:
-            raise UserError(_('Only draft, sent, or waiting quotations can be approved by GM.'))
+            raise UserError(_('Only quotations waiting for GM approval can be confirmed.'))
 
-        orders_to_approve.filtered(lambda order: order.state == 'waiting').write({'state': 'sent'})
-        result = super(SaleOrder, orders_to_approve).action_confirm()
+        result = super(SaleOrder, self).action_confirm()
+        approval_time = fields.Datetime.now()
+        self.write({
+            'gm_approved_by': self.env.user.id,
+            'gm_approved_on': approval_time,
+        })
 
-        approval_message = "<span style='color:green;'>Order approved by: %s</span>" % self.env.user.partner_id.name
-        orders_to_approve.write({'approval_required': approval_message})
+        for order in self:
+            order.message_post(body=_('Approved by %s on %s') % (self.env.user.partner_id.name, approval_time))
         return result
 
-    @api.depends('order_line')
-    def _get_order_cost(self):
-        total_cost = sum(line.product_uom_qty * line.product_id.standard_price for line in self.order_line)
-        self.sale_order_cost = total_cost
-
     def action_confirm(self):
-        for rec in self:
-            if rec.user_id:
-                selected_analytic_account_id = self.env['account.analytic.account'].search(
-                    [('partner_id', '=', rec.user_id.partner_id.id)], limit =1)
-                if selected_analytic_account_id:
-                    for line in self.order_line:
-                        line.write({'analytic_distribution': {selected_analytic_account_id.id: 100}})
-            if rec.state == 'draft':
-                approval_message = f"<span style='color:red;'>Second approval is needed for all quotes </span>"
-                rec.write({ 'state': 'waiting', 'approval_required': approval_message,})
-
-    def action_approve(self):
         if self.env.user.user_has_groups('sales_team.group_sale_manager'):
             return super().action_confirm()
-        else:
-            raise UserError(_('You can''t approve this order , only managers can approve'))
+        raise UserError(_('Use "Send for GM Approval". Only the GM can confirm quotations.'))
+
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def write(self, vals):
         for partner in self:
-            if vals.get('active') is False and  partner.credit >0:
-                raise UserError(_('You can''t archive partner when credit is bigger than zero(0) '))
-            else:
-                return super(ResPartner, self).write(vals)
-
+            if vals.get('active') is False and partner.credit > 0:
+                raise UserError(_('You can\'t archive partner when credit is bigger than zero (0).'))
+        return super(ResPartner, self).write(vals)

@@ -6,15 +6,32 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//form/header/button[@id='action_confirm']" position="before">
-                    <button name="gm_action_confirm" type="object"
-                            class="btn-primary" string="GM Confirm" invisible="state != 'waiting'"
+                <xpath expr="//form/header/button[@id='action_confirm']" position="replace">
+                    <button
+                        name="action_request_gm_approval"
+                        type="object"
+                        string="Send for GM Approval"
+                        class="btn-primary"
+                        invisible="state not in ('draft', 'sent')"
                     />
+                    <button
+                        name="gm_action_confirm"
+                        type="object"
+                        string="GM Confirm"
+                        class="btn-primary"
+                        groups="sales_team.group_sale_manager"
+                        invisible="state != 'waiting_gm'"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='state']" position="attributes">
+                    <attribute name="statusbar_visible">draft,sent,waiting_gm,sale</attribute>
                 </xpath>
                 <field name="payment_term_id" position="after">
                     <field name="user_id"/>
                     <field name="warehouse_id"/>
                     <field name="client_order_ref"/>
+                    <field name="gm_approved_by" readonly="1" invisible="not gm_approved_by"/>
+                    <field name="gm_approved_on" readonly="1" invisible="not gm_approved_on"/>
                 </field>
             </field>
         </record>

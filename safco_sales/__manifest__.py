@@ -10,6 +10,7 @@
     'data': [
             'views/views_account_payment.xml',
             'views/sale_order_views.xml',
+            'views/report_saleorder.xml',
             'views/view_product.xml',
             ],
     'demo': [],

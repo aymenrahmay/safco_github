@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_safco" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//tr[@name='tr_product']/td[@name='td_product_name']/span" position="replace">
+            <t t-set="product_name" t-value="line.product_id.display_name if line.product_id else False"/>
+            <t t-set="description_parts" t-value="line.name.split('\n', 1) if line.name else []"/>
+            <t
+                t-set="extra_description"
+                t-value="description_parts[1] if product_name and len(description_parts) &gt; 1 and description_parts[0] == product_name else line.name if product_name and line.name != product_name else False"
+            />
+            <t t-if="product_name">
+                <strong t-esc="product_name"/>
+                <br t-if="extra_description"/>
+                <span t-if="extra_description" t-esc="extra_description"/>
+            </t>
+            <span t-else="" t-field="line.name">Bacon Burger</span>
+        </xpath>
+    </template>
+</odoo>
