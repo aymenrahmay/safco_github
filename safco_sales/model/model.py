@@ -69,7 +69,7 @@ class SaleOrder(models.Model):
         if invalid_orders:
             raise UserError(_('Only quotations waiting for GM approval can be confirmed.'))
 
-        result = super(SaleOrder, self).action_confirm()
+        result = self.with_context(gm_approval_confirm=True).action_confirm()
         approval_time = fields.Datetime.now()
         self.write({
             'gm_approved_by': self.env.user.id,
@@ -81,9 +81,21 @@ class SaleOrder(models.Model):
         return result
 
     def action_confirm(self):
-        if self.env.user.has_group('sales_team.group_sale_manager'):
+        if self.env.context.get('gm_approval_confirm'):
+            invalid_orders = self.filtered(lambda order: order.state != 'waiting_gm')
+            if invalid_orders:
+                raise UserError(_('Only quotations waiting for GM approval can be confirmed.'))
             return super().action_confirm()
-        raise UserError(_('Use "Send for GM Approval". Only the GM can confirm quotations.'))
+
+        if self.filtered(lambda order: order.state in ('draft', 'sent')):
+            raise UserError(_('Use "Send for GM Approval" before confirming the quotation.'))
+        raise UserError(_('Use "GM Confirm" to confirm quotations waiting for GM approval.'))
+
+    def _confirmation_error_message(self):
+        self.ensure_one()
+        if self.env.context.get('gm_approval_confirm') and self.state == 'waiting_gm':
+            return False
+        return super()._confirmation_error_message()
 
 
 class ResPartner(models.Model):
