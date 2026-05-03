@@ -87,6 +87,11 @@ class SaleOrder(models.Model):
                 raise UserError(_('Only quotations waiting for GM approval can be confirmed.'))
             return super().action_confirm()
 
+        # Keep standard automated confirmation flows working, such as website/payment
+        # transaction post-processing that confirms carts with send_email=True.
+        if self.env.context.get('send_email'):
+            return super().action_confirm()
+
         if self.filtered(lambda order: order.state in ('draft', 'sent')):
             raise UserError(_('Use "Send for GM Approval" before confirming the quotation.'))
         raise UserError(_('Use "GM Confirm" to confirm quotations waiting for GM approval.'))
